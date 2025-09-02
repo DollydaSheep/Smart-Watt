@@ -3,6 +3,8 @@
 
 First, clone project
 
+`git clone https://github.com/DollydaSheep/Smart-Watt.git`
+
 Second, in your terminal:
 
 `npm install`
