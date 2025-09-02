@@ -11,6 +11,10 @@ Second, in your terminal:
 
 to install dependencies.
 
+To create your own branch :
+
+`git checkout -b {INSERT BRANCH NAME ---IKAW MAG BUOT UNSAY NGAN---}`
+
 To run development server:
 
 `npm run dev`
