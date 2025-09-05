@@ -1,7 +1,10 @@
 "use client"
 
 
+
 export default function Sidemenu() {
+
+
 return (
     
 <div className="flex">
@@ -15,7 +18,7 @@ return (
         <div className="px-2">
           <div className="py-4">
             <a
-              href="#"
+              href="http://localhost:3000/"
               className="t group relative flex justify-center rounded-sm bg-blue-100 px-2 py-1.5 text-blue-700"
             >
               <svg
@@ -49,7 +52,7 @@ return (
           <ul className="space-y-1  border-gray-100 pt-4">
             <li>
               <a
-                href="#"
+                href="Statistics"
                 className="group relative flex justify-center rounded-sm px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               >
                 <svg

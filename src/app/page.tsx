@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { RadarChart } from "../Components/application/charts/radar-chart";
+import { RadarChart } from "../components/application/charts/radar-chart";
 
 export default function Home() {
   return (
@@ -39,7 +39,7 @@ export default function Home() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Start Here
+        Instruction
       </a>
     </div>
   </div>

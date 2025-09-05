@@ -2,7 +2,7 @@
 'use client';
 
 import { Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart as RechartsRadarChart, ResponsiveContainer, Tooltip } from "recharts";
-import { ChartLegendContent, ChartTooltipContent } from "./charts-base";
+import { ChartLegendContent, ChartTooltipContent } from "@/components/application/charts/charts-base";
 import { cx } from "@/utils/cx";
 
 
