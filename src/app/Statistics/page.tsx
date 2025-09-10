@@ -1,13 +1,10 @@
 'use client';
 
-import { ChartAreaInteractive } from "@/components/areachart";
-import { ChartAreaStackedExpand } from "@/components/areachart2";
-import { ChartBarStacked } from "@/components/barchart";  
-import { ChartLineLabel } from "@/components/linechart";
-import { ChartPieInteractive } from "@/components/Piechart";
-import { ChartRadialStacked } from "@/components/radialchart";
-import { CardContent } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+import { ChartAreaInteractive } from "@/Components/areachart";
+import { ChartAreaStackedExpand } from "@/Components/areachart2";
+import { ChartBarStacked } from "@/Components/barchart";  
+import { ChartPieInteractive } from "@/Components/Piechart";
+import { ChartRadialStacked } from "@/Components/radialchart";
 
 
 

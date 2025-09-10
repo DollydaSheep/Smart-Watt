@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/Components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
@@ -18,7 +18,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/Components/ui/chart"
 
 export const description = "A stacked bar chart with a legend"
 
