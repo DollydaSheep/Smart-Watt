@@ -6,19 +6,19 @@ import { ChartLegendContent, ChartTooltipContent } from "@/Components/applicatio
 import { cx } from "@/utils/cx";
 
 
-const CustomRadarChartTick = ({ x, y, payload, ...rest }: any) => {
-  return (
-    <text
+// const CustomRadarChartTick = ({ x, y, payload, ...rest }: any) => {
+//   return (
+//     <text
       
     
-      textAnchor="middle"
-      {...rest}
-      className="fill-utility-red-500 text-xs"
-    >
+//       textAnchor="middle"
+//       {...rest}
+//       className="fill-utility-red-500 text-xs"
+//     >
  
-    </text>
-  );
-};
+//     </text>
+//   );
+// };
 
 const radarData = [
     {
@@ -109,7 +109,7 @@ export const RadarChart = () => {
                     tickLine={false}
                     axisLine={false}
                 />
-                <PolarRadiusAxis textAnchor="middle" tick={(props) => <CustomRadarChartTick {...props} />} axisLine={false} angle={90} domain={[0, 1000]} />
+                {/* <PolarRadiusAxis textAnchor="middle" tick={(props) => <CustomRadarChartTick {...props} />} axisLine={false} angle={90} domain={[0, 1000]} /> */}
 
                 <Tooltip
                     content={<ChartTooltipContent />}
