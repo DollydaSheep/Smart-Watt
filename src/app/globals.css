@@ -1,54 +1,46 @@
 @import "tailwindcss";
 
-/* Light mode variables */
+/* Light mode variables - Mint Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --card: #f80d0d;
-  --card-foreground: #ca0808;
-  --muted: #f4f4f5;
-  --muted-foreground: #ffffff;
-  --border: #2c0a0a;
-  --input: #e5e7eb;
-  --primary: #171717;
-  --primary-foreground: #fff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #171717;
-  --accent: #e0e7ff;
-  --accent-foreground: #171717;
-  --destructive: #ef4444;
-  --destructive-foreground: #fff;
-  --ring: #6366f1;
+  --background: #f0faf7;  /* Very light mint */
+  --foreground: #0f3d33;  /* Dark teal for text */
+  --card: #ffffff;       /* White cards */
+  --card-foreground: #0f3d33;
+  --muted: #e0f2f1;     /* Light mint */
+  --muted-foreground: #2d7a6e;  /* Muted teal */
+  --border: #b2dfdb;     /* Soft mint border */
+  --input: #e0f2f1;     /* Light mint input */
+  --primary: #00796b;    /* Teal primary */
+  --primary-foreground: #ffffff;
+  --secondary: #b2dfdb;  /* Soft mint secondary */
+  --secondary-foreground: #00796b;
+  --accent: #80cbc4;     /* Mint accent */
+  --accent-foreground: #0f3d33;
+  --destructive: #ff6b6b; /* Soft red for destructive actions */
+  --destructive-foreground: #ffffff;
+  --ring: #4db6ac;       /* Brighter mint for focus rings */
   --radius: 0.5rem;
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 /* Dark mode variables */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #09090b;
-    --foreground: #ededed;
-    --card: #0606be;
-    --card-foreground: #fff;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
-    --border: #ffffff;
-    --input: #27272a;
-    --primary: #b92424;
-    --primary-foreground: #171717;
-    --secondary: #27272a;
-    --secondary-foreground: #ededed;
-    --accent: #6366f1;
-    --accent-foreground: #fff;
-    --destructive: #f87171;
-    --destructive-foreground: #171717;
-    --ring: #6366f1;
-    --radius: 0.5rem;
-  }
+.dark {
+  --background: #09090b;
+  --foreground: #ededed;
+  --card: #1e1e2e;
+  --card-foreground: #ffffff;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: #3f3f46;
+  --input: #3f3f46;
+  --primary: #ffffff;
+  --primary-foreground: #171717;
+  --secondary: #27272a;
+  --secondary-foreground: #ffffff;
+  --accent: #4f46e5;
+  --accent-foreground: #ffffff;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fef2f2;
+  --ring: #6366f1;
 }
 
 @layer base {
@@ -60,11 +52,11 @@
     --chart-5: oklch(0.769 0.188 70.08);
   }
   .dark {
-    --chart-1: oklch(57.252% 0.26775 317.614);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
+    --chart-1: #48c07f; /* Indigo-600 */
+    --chart-2: #209688; /* Emerald-500 */
+    --chart-3: #214E64; /* Blue-500 */
+    --chart-4: #F7B900; /* Amber-500 */
+    --chart-5: #F49900; /* Pink-500 */
   }
 }
 

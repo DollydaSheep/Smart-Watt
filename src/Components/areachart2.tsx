@@ -1,33 +1,43 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
+import { useState } from 'react';
+import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 export const description = "A stacked area chart with expand stacking"
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80, other: 45 },
-  { month: "February", desktop: 305, mobile: 200, other: 100 },
-  { month: "March", desktop: 237, mobile: 120, other: 150 },
-  { month: "April", desktop: 73, mobile: 190, other: 50 },
-  { month: "May", desktop: 209, mobile: 130, other: 100 },
-  { month: "June", desktop: 214, mobile: 140, other: 160 },
-]
+const monthlyData = {
+  January: [
+    { day: 1, desktop: 6, mobile: 3, other: 2 },
+    { day: 5, desktop: 10, mobile: 5, other: 3 },
+    { day: 10, desktop: 15, mobile: 8, other: 5 },
+    { day: 15, desktop: 20, mobile: 12, other: 7 },
+    { day: 20, desktop: 18, mobile: 10, other: 6 },
+    { day: 25, desktop: 12, mobile: 6, other: 4 },
+    { day: 30, desktop: 8, mobile: 4, other: 2 },
+  ],
+  February: [
+    { day: 1, desktop: 8, mobile: 4, other: 3 },
+    { day: 5, desktop: 12, mobile: 6, other: 4 },
+    { day: 10, desktop: 18, mobile: 10, other: 6 },
+    { day: 15, desktop: 22, mobile: 15, other: 8 },
+    { day: 20, desktop: 20, mobile: 12, other: 7 },
+    { day: 25, desktop: 15, mobile: 8, other: 5 },
+    { day: 28, desktop: 10, mobile: 5, other: 3 },
+  ],
+  // Add more months as needed
+};
+
+const months = [
+  { name: "January", data: monthlyData.January },
+  { name: "February", data: monthlyData.February },
+  { name: "March", data: monthlyData.January },
+  { name: "April", data: monthlyData.February },
+  { name: "May", data: monthlyData.January },
+  { name: "June", data: monthlyData.February },
+];
 
 const chartConfig = {
   desktop: {
@@ -45,68 +55,83 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartAreaStackedExpand() {
+  const [selectedMonth, setSelectedMonth] = useState(months[0]);
+  
   return (
-     <Card className=" bg-white/5 border-2 border-white/10 shadow-lg rounded-2xl">
-      <CardHeader>
-        <CardTitle>Area Chart - Stacked Expanded</CardTitle>
-        <CardDescription className="text-white/40">
-          Showing total visitors for the last 6months
-        </CardDescription>
+    <Card className="bg-white/5 border-2 border-white/10 shadow-lg rounded-2xl">
+      <CardHeader className="pb-2">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <CardTitle>Monthly Usage</CardTitle>
+            <CardDescription className="text-white/40">
+              Showing daily data for {selectedMonth.name}
+            </CardDescription>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
+            {months.map((month) => (
+              <Button
+                key={month.name}
+                variant="ghost"
+                size="sm"
+                className={`text-xs h-8 px-2 text-nowrap ${selectedMonth.name === month.name ? 'text-white' : 'text-white/50 hover:text-white'}`}
+                onClick={() => setSelectedMonth(month)}
+              >
+                {month.name.slice(0, 3)}
+              </Button>
+            ))}
+          </div>
+        </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-              top: 12,
-            }}
-            stackOffset="expand"
-          >
-            <CartesianGrid vertical={false} stroke="#202020" />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
-            />
-            <Area
-              dataKey="other"
-              type="natural"
-              fill="var(--color-other)"
-              fillOpacity={0.1}
-              stroke="var(--color-other)"
-              stackId="a"
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-          </AreaChart>
-        </ChartContainer>
+      <CardContent className="pt-4">
+        <div className="h-[300px] w-full">
+          <ChartContainer config={chartConfig}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={selectedMonth.data}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                stackOffset="expand"
+              >
+                <CartesianGrid vertical={false} stroke="#202020" />
+                <XAxis 
+                  dataKey="day" 
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => `${value}${value === 1 ? 'st' : value === 2 ? 'nd' : value === 3 ? 'rd' : 'th'}`}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="line" />}
+                />
+                <Area
+                  dataKey="other"
+                  type="monotone"
+                  fill="var(--chart-3)"
+                  fillOpacity={0.1}
+                  stroke="var(--chart-3)"
+                  stackId="a"
+                />
+                <Area
+                  dataKey="mobile"
+                  type="monotone"
+                  fill="var(--chart-2)"
+                  fillOpacity={0.4}
+                  stroke="var(--chart-2)"
+                  stackId="a"
+                />
+                <Area
+                  dataKey="desktop"
+                  type="monotone"
+                  fill="var(--chart-1)"
+                  fillOpacity={0.4}
+                  stroke="var(--chart-1)"
+                  stackId="a"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </div>
       </CardContent>
-      <CardFooter>
-        
-      </CardFooter>
     </Card>
-  )
+  );
 }
