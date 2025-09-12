@@ -106,7 +106,7 @@ export function ChartPieInteractive() {
               onClick={(data, index) => handlePieClick(data, index)}
             >
               <Label
-                content={(props: any) => {
+              content={(props: Record<string, any>) => {
                   const viewBox = props.viewBox as {
                     cx: number;
                     cy: number;
@@ -118,6 +118,7 @@ export function ChartPieInteractive() {
                   if (!viewBox?.cx || !viewBox?.cy) {
                     return null;
                   }
+                  
                   
                   const { cx, cy } = viewBox;
                   const activeColor = desktopData[activeIndex].fill;
