@@ -1,7 +1,10 @@
 "use client"
 
+
 import Image from "next/image";
 import { Visualization3D } from "@/components/Visualization3D";
+
+
 
 export default function Home() {
   return (
