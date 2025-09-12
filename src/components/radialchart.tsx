@@ -5,8 +5,6 @@ import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart"
 
 export const description = "A radial chart with stacked sections"
