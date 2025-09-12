@@ -6,11 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useSwipeable } from "react-swipeable"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import {
-  ChartConfig,
-  ChartContainer,
-} from "@/components/ui/chart"
-
+import { ChartConfig } from "@/components/ui/chart"
 export const description = "An interactive area chart"
 
 // Group data by month
