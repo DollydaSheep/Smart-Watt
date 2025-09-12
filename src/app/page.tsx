@@ -14,7 +14,7 @@ export default function Home() {
           <div className="w-full max-w-[500px] mx-auto md:mx-0">
             <Image
               className="dark:invert w-full h-auto"
-              src="/SVG/smartwatt.svg"
+              src="/SVG/smartwattWhite.svg"
               alt="SmartWatt Logo"
               width={620}
               height={124}
