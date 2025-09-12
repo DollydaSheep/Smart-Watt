@@ -13,7 +13,7 @@ export default function Home() {
         <div className="flex flex-col gap-6 w-full max-w-2xl">
           <div className="w-full max-w-[500px] mx-auto md:mx-0">
             <Image
-              className="dark:invert w-full h-auto"
+              className="w-full h-auto"
               src="/SVG/smartwattWhite.svg"
               alt="SmartWatt Logo"
               width={620}
