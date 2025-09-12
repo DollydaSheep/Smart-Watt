@@ -1,11 +1,12 @@
 'use client';
 
-import { ChartAreaInteractive } from "@/Components/areachart";
-import { ChartAreaStackedExpand } from "@/Components/areachart2";
-import { ChartBarStacked } from "@/Components/barchart";  
-import { ChartPieInteractive } from "@/Components/Piechart";
-import { ChartRadialStacked } from "@/Components/radialchart";
 
+import { ChartAreaInteractive } from "@/components/areachart";
+import { ChartPieInteractive } from "@/components/Piechart";
+import { ChartRadialStacked } from "@/components/radialchart";
+import { ChartBarStacked } from "@/components/barchart";
+import { CardContent } from "@/components/ui/card";
+import { LucideIcon } from "lucide-react";
 
 
 
@@ -13,42 +14,44 @@ import { ChartRadialStacked } from "@/Components/radialchart";
 export default function Statistics() {
   return (
  
-    <div className="flex flex-col ml-20 h-2vh w-2vh m-5 p-5">
-      <div className="w-1vh h-1/2 p-5">
-       
-        <ChartAreaInteractive/>
-        
+    <div className="w-full min-h-screen p-4 md:p-6 md:pl-24 space-y-6">
+      {/* Top Section - Full Width */}
+      <div className="w-full">
+        <div className="bg-card rounded-xl p-4 sm:p-6 w-full h-auto overflow-visible space-y-4">
+          <div className="text-center space-y-1">
+            <h2 className="text-4xl sm:text-xxl font-bold tracking-wider">STATISTICS</h2>
+          </div>
+          <div className="w-full h-[300px] min-w-0">
+            <div className="w-full h-full relative">
+              <ChartAreaInteractive/>
+            </div>
+          </div>
+        </div>
       </div>
 
-     <div className="flex flex-row w-full h-[40vh] gap-4 mt-5">
+      {/* Bottom Section - Three Column Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-20">
+        {/* Pie Chart */}
+        <div className="bg-card rounded-xl p-4 overflow-hidden">
+          <div className="w-full h-[300px] -m-2">
+            <ChartPieInteractive />
+          </div>
+        </div>
+
+        {/* Radial Chart */}
+        <div className="bg-card rounded-xl p-4 overflow-hidden">
+          <div className="w-full h-[300px] -m-2">
+            <ChartRadialStacked />
+          </div>
+        </div>
         
-        {/* ChartBarStacked */}
-        <div className="flex-1 h-full">
-          <ChartBarStacked />
+        {/* Bar Chart */}
+        <div className="bg-card rounded-xl p-4 overflow-hidden">
+          <div className="w-full h-[300px] -m-2">
+            <ChartBarStacked />
+          </div>
         </div>
-          {/* ChartLineLabel */}
-        <div className=" flex-1 h-full">
-          <ChartAreaStackedExpand/>
-        </div>
-
-     
-         {/* ChartLineLabel */}
-        <div className=" flex-1 h-full">
-          <ChartPieInteractive />
-        </div>
-
-          {/* ChartLineLabel */}
-        <div className=" flex-1 h-full">
-          <ChartRadialStacked />
-        </div>
-
-        
-        
-
-
       </div>
-  
-
     </div>
    
   );

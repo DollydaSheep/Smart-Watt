@@ -1,0 +1,54 @@
+"use client"
+
+import Image from "next/image";
+import dynamic from 'next/dynamic';
+
+const Sphere3D = dynamic(() => import('@/components/Sphere3DWrapper'), {
+  ssr: false,
+});
+
+export default function Home() {
+  return (
+    <div className="font-sans min-h-screen w-full p-4 sm:p-8 bg-gradient-to-b from-transparent to-transparent">
+      <main className="flex flex-col md:flex-row items-center justify-center h-full w-full max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4 sm:gap-6 w-full max-w-md order-last md:order-first">
+          <div className="w-full max-w-[400px] sm:max-w-[500px] mx-auto md:mx-0">
+            <Image
+              className="dark:invert w-full h-auto"
+              src="/SVG/smartwatt.svg"
+              alt="SmartWatt Logo"
+              width={620}
+              height={124}
+              priority
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+            Smart Energy Solutions
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            Optimize your energy consumption with our smart monitoring system.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            <a
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full px-6 py-3 text-center transition-colors"
+              href="#"
+            >
+              Get Started
+            </a>
+            <a
+              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-12 px-5 w-full sm:w-auto"
+              href="#"
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        <div className="w-full h-[60vh] md:h-[80vh] aspect-square order-first md:order-last">
+          <div className="w-full h-full">
+            <Sphere3D />
+          </div>
+        </div>
+      </main>
+    </div>

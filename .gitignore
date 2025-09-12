@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.*
-.yarn/*
+/yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
@@ -32,10 +32,52 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
 
+# netlify
+.netlify/
+.netlify/
+
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build output
+.next/
+out/
+
+# Cache
+.cache/
+.temp/
+.tmp/
+.temp*
+
+# Logs
+logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

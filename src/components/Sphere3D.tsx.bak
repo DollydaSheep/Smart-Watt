@@ -1,0 +1,208 @@
+'use client';
+
+import { useRef, useState, Suspense, useMemo, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls, useTexture } from '@react-three/drei';
+import * as THREE from 'three';
+
+// Data points from radar chart with initial positions and targets
+const dataPoints = [
+  { 
+    value: 800, 
+    color: '#3b82f6',  // A: utility-brand-600
+    position: new THREE.Vector3(2.5, 0, 0.8),
+    target: new THREE.Vector3(0, 0, 0)
+  },
+  { 
+    value: 1000, 
+    color: '#ec4899', // B: utility-pink-500
+    position: new THREE.Vector3(-2, 2, 0.8),
+    target: new THREE.Vector3(0, 0, 0)
+  },
+  { 
+    value: 800, 
+    color: '#60a5fa',  // C: utility-blue-light-500
+    position: new THREE.Vector3(0.8, -2, 2),
+    target: new THREE.Vector3(0, 0, 0)
+  },
+];
+
+function DataPoint({ 
+  position, 
+  color, 
+  scale,
+  target,
+  mergeProgress,
+  gridTexture
+}: { 
+  position: THREE.Vector3;
+  color: string; 
+  scale: number;
+  target: THREE.Vector3;
+  mergeProgress: number;
+  gridTexture: THREE.Texture;
+}) {
+  const ref = useRef<THREE.Mesh>(null);
+  
+  useFrame(() => {
+    if (ref.current) {
+      // Reverse the merge effect - move away from center on hover
+      ref.current.position.lerpVectors(target, position, mergeProgress * 0.8);
+      
+      // Pulsing effect - stronger when not merged
+      const pulse = 1 + Math.sin(performance.now() * 0.002) * 0.1 * mergeProgress;
+      ref.current.scale.setScalar(scale * (0.8 + mergeProgress * 0.4) * pulse);
+    }
+  });
+
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.3, 24, 24]} />
+      <meshStandardMaterial 
+        color={color}
+        emissive={color}
+        emissiveIntensity={1.5}
+        metalness={0.8}
+        roughness={0.2}
+        map={gridTexture}
+        alphaMap={gridTexture}
+        transparent
+        opacity={0.9}
+        envMapIntensity={1}
+      />
+      <pointLight 
+        color={color} 
+        intensity={2} 
+        distance={5}
+        decay={2}
+      />
+    </mesh>
+  );
+}
+
+function Sphere() {
+  const sphereRef = useRef<THREE.Mesh>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
+  const [hovered, setHover] = useState(false);
+  const [mergeProgress, setMergeProgress] = useState(0);
+  const { scene } = useThree();
+  
+  // Create a grid texture
+  const gridTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    const size = 256;
+    canvas.width = size;
+    canvas.height = size;
+    const context = canvas.getContext('2d')!;
+    
+    // Draw grid
+    context.strokeStyle = '#ffffff';
+    context.lineWidth = 2;
+    context.beginPath();
+    
+    // Draw grid lines
+    const step = size / 8;
+    for (let i = 0; i <= size; i += step) {
+      context.moveTo(i, 0);
+      context.lineTo(i, size);
+      context.moveTo(0, i);
+      context.lineTo(size, i);
+    }
+    
+    context.stroke();
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+    
+    return texture;
+  }, []);
+
+  // Handle hover state
+  useEffect(() => {
+    document.body.style.cursor = hovered ? 'pointer' : 'auto';
+  }, [hovered]);
+
+  // Animate merge progress
+  useFrame(() => {
+    setMergeProgress(prev => {
+      const target = hovered ? 1 : 0;
+      return THREE.MathUtils.lerp(prev, target, 0.05);
+    });
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 0, 0]} scale={[1, 1, 1]}>
+      {/* Main Sphere */}
+      <mesh
+        ref={sphereRef}
+        position={[0, 0, 0]}
+        scale={[0.5, 0.5, 0.5]}
+      >
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshStandardMaterial 
+          color={hovered ? '#3b82f6' : '#1e40af'}
+          roughness={0.3}
+          metalness={0.7}
+          transparent
+          opacity={0.25}
+          envMapIntensity={2.5}
+          wireframe={false}
+        />
+      </mesh>
+
+      {/* Data Points */}
+      {dataPoints.map((point, index) => (
+        <DataPoint
+          key={index}
+          position={point.position}
+          color={point.color}
+          scale={0.15}
+          target={point.target}
+          mergeProgress={mergeProgress}
+          gridTexture={gridTexture}
+        />
+      ))}
+
+      {/* Ambient light for better visibility */}
+      <ambientLight intensity={0.5} />
+      
+      {/* Point light for main sphere */}
+      <pointLight 
+        position={[0, 0, 5]}
+        intensity={1}
+        color="#ffffff"
+        decay={1.5}
+      />
+    </group>
+  );
+}
+
+const Sphere3DComponent = () => {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 8], fov: 50 }}
+      style={{
+        width: '100%',
+        height: '100%',
+        background: 'transparent',
+      }}
+      gl={{ antialias: true }}
+      dpr={[1, 2]}
+    >
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <Suspense fallback={null}>
+        <Sphere />
+        <OrbitControls 
+          enableZoom={false} 
+          autoRotate 
+          autoRotateSpeed={1.5} 
+          enableDamping
+          dampingFactor={0.05}
+        />
+      </Suspense>
+    </Canvas>
+  );
+}
