@@ -113,7 +113,15 @@ export function ChartPieInteractive() {
               onClick={(data, index) => handlePieClick(data, index)}
             >
               <Label
-                content={({ viewBox }: { viewBox?: { cx?: number; cy?: number; innerRadius?: number; outerRadius?: number; startAngle?: number; endAngle?: number; } }) => {
+                content={(props: any) => {
+                  const viewBox = props.viewBox as {
+                    cx: number;
+                    cy: number;
+                    innerRadius: number;
+                    outerRadius: number;
+                    startAngle: number;
+                    endAngle: number;
+                  };
                   if (!viewBox?.cx || !viewBox?.cy) {
                     return null;
                   }

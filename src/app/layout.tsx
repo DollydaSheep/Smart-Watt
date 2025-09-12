@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidemenu from "@/components/sidemenu";
-import { ThemeProvider } from "@/components/theme-provider"
+// import { ThemeProvider } from "@/components/theme-provider"
 
 
 const geistSans = Geist({
@@ -31,25 +31,23 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
-      >
-        <ThemeProvider
+    <html lang="en" suppressHydrationWarning className="dark">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground` }>
+        {/* <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
-        >
+        > */}
           <div className="fixed top-0 left-0 z-50 mb-4">
             <Sidemenu />
           </div>
-          <div className="relative z-10">
-            {children}
-          </div>
-        </ThemeProvider>
-
-
+          <main className="min-h-screen">
+            <div className="relative z-10">
+              {children}
+            </div>
+          </main>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
