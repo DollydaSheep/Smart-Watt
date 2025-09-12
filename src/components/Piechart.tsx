@@ -61,7 +61,7 @@ export function ChartPieInteractive() {
  
   const [activeIndex, setActiveIndex] = React.useState(0)
 
-  const handlePieClick = (data: any, index: number) => {
+   const handlePieClick = (data: { month: string; desktop: number; fill: string }, index: number) => {
     setActiveIndex(index)
   }
 
