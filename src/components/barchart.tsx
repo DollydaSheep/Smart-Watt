@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react"
 import { useSwipeable } from "react-swipeable"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -136,3 +135,4 @@ export function ChartBarStacked() {
     </div>
   )
 }
+

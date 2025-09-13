@@ -102,7 +102,7 @@ export default function Sidemenu() {
         {/* Logo */}
         <div className="flex justify-center py-4 pt-7">
           <img 
-            src="/SVG/SWEmblem.svg" 
+            src="/SVG/EmblemWhite.svg"  
             alt="SWEmblem" 
             className="h-10 w-10 filter brightness-0 invert"
           />

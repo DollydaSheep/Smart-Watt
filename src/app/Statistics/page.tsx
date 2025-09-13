@@ -5,8 +5,7 @@ import { ChartAreaInteractive } from "@/components/areachart";
 import { ChartPieInteractive } from "@/components/Piechart";
 import { ChartRadialStacked } from "@/components/radialchart";
 import { ChartBarStacked } from "@/components/barchart";
-import { CardContent } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
+
 
 
 

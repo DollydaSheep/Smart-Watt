@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text, Html } from '@react-three/drei';
+import { useRef} from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Types
@@ -14,9 +14,6 @@ export type SphereData = {
   constantKey: string;
 };
 
-type Sphere3DProps = {
-  // Add any future props here if needed
-};
 
 // Base size for all spheres
 const SPHERE_CONSTANTS = {

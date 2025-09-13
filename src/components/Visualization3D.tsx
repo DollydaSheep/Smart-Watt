@@ -65,7 +65,7 @@ export function Visualization3D() {
   return (
     <div className="w-full max-w-2xl mx-auto md:mx-0 md:w-1/2 lg:w-2/5 xl:w-1/3 -mt-3 md:mt-0 flex flex-col items-center ">
       {/* Label showing sphere data */}
-      <div className="w-full bg-gray-100 dark:bg-white/5 rounded-lg p-4 mb-2">
+      <div className="w-full bg-gray-100 dark:bg-[#161617] rounded-lg p-4 mb-2">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Connected Devices</h3>
         <div className="grid grid-cols-2 gap-2">
           {sphereDataWithPercentage.map((device) => (

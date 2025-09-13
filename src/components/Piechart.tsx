@@ -4,7 +4,7 @@ import * as React from "react"
 import { Label, Pie, PieChart, Sector } from "recharts"
 import { PieSectorDataItem } from "recharts/types/polar/Pie"
 
-import { Card } from "@/components/ui/card"
+
 import {
   ChartConfig,
   ChartContainer,
@@ -12,13 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 
 export const description = "An interactive pie chart"
 
@@ -64,12 +58,11 @@ const chartConfig = {
 
 export function ChartPieInteractive() {
   const id = "pie-interactive"
-  const [activeMonth, setActiveMonth] = React.useState(desktopData[0].month)
+ 
   const [activeIndex, setActiveIndex] = React.useState(0)
 
-  const handlePieClick = (data: any, index: number) => {
+   const handlePieClick = (data: { month: string; desktop: number; fill: string }, index: number) => {
     setActiveIndex(index)
-    setActiveMonth(desktopData[index].month)
   }
 
   return (
@@ -113,7 +106,7 @@ export function ChartPieInteractive() {
               onClick={(data, index) => handlePieClick(data, index)}
             >
               <Label
-                content={(props: any) => {
+                 content={(props: { viewBox?: PieSectorDataItem }) => {
                   const viewBox = props.viewBox as {
                     cx: number;
                     cy: number;
