@@ -167,7 +167,7 @@ export const ChartAreaInteractive = () => {
   }
 
   return (
-    <Card className="bg-transparent border-transparent shadow-lg rounded-2xl" {...swipeHandlers}>
+    <Card className="bg-transparent h-full border-transparent shadow-lg rounded-2xl" {...swipeHandlers}>
       <CardHeader className="pb-2">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-2 justify-center">
@@ -277,8 +277,8 @@ export const ChartAreaInteractive = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-0 sm:p-2">
-        <div className="h-[250px] w-full min-w-0">
+      <CardContent className="p-0 sm:p-2 h-full md:flex md:justify-center md:items-center">
+        <div className="h-auto w-full md:w-11/12 lg:w-4/5 min-w-0">
           <ChartContainer config={chartConfig}>
             <ResponsiveContainer width="99%" height="99%" className="text-xs mx-auto">
               <AreaChart 
