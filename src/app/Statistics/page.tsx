@@ -13,7 +13,7 @@ import { ChartBarStacked } from "@/components/barchart";
 export default function Statistics() {
   return (
     
-    <div className="w-full min-h-screen p-4 md:pl-24 space-y-6 md:flex">
+    <div className="w-full h-screen p-4 md:pl-24 space-y-6 md:flex box-sizing">
       {/* Top Section - Full Width */}
       <div className="w-full">
         <div className="bg-card rounded-xl p-4 sm:p-6 w-full h-auto overflow-visible space-y-4">
@@ -29,24 +29,24 @@ export default function Statistics() {
       </div>
 
       {/* Bottom Section - Three Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-row-3 gap-6 mt-20 md:mt-4">
+      <div className="grid h-full grid-cols-1 lg:grid-row-3 gap-6 mt-20 md:mt-4">
         {/* Pie Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
-          <div className="w-full md:w-5/6 h-[300px] md:h-[175px] lg:h-[200px] -m-2">
+          <div className="w-full h-[300px] md:h-[175px] lg:h-[200px] -m-2">
             <ChartPieInteractive />
           </div>
         </div>
 
         {/* Radial Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
-          <div className="w-full md:w-5/6 h-[300px] md:h-[175px] lg:h-[200px] -m-2">
+          <div className="w-full h-[300px] md:h-[175px] lg:h-[200px] -m-2">
             <ChartRadialStacked />
           </div>
         </div>
         
         {/* Bar Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
-          <div className="w-full md:w-5/6 h-[300px] md:h-[175px] lg:h-[200px] -m-2 mb-40 md:mb-0">
+          <div className="w-full h-[300px] md:h-[175px] lg:h-[200px] -m-2 mb-40 md:mb-0">
             <ChartBarStacked />
           </div>
         </div>
