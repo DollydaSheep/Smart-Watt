@@ -32,8 +32,8 @@ export function ChartRadialStacked() {
         <RadialBarChart
           data={chartData}
           endAngle={180}
-          innerRadius={170}
-          outerRadius={90}
+          innerRadius="90%"
+          outerRadius="150%"
         >
           <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
             <Label
@@ -43,15 +43,15 @@ export function ChartRadialStacked() {
                     <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                       <tspan
                         x={viewBox.cx}
-                        y={(viewBox.cy || 0) - 20}
-                        className="fill-[var(--chart-1)] text-6xl font-bold"
+                        y={(viewBox.cy || 0) - 10}
+                        className="fill-[var(--chart-1)] text-6xl md:text-3xl lg:text-4xl font-bold"
                       >
                         {totalVisitors.toLocaleString()}
                       </tspan>
                       <tspan
                         x={viewBox.cx}
                         y={(viewBox.cy || 0) + 55}
-                        className="fill-white/40 text-5xl font-semibold"
+                        className="fill-white/40 text-5xl md:text-3xl font-semibold"
                       >
                         Total Watts
                       </tspan>

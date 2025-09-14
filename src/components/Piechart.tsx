@@ -98,7 +98,7 @@ export function ChartPieInteractive() {
                   <Sector {...props} outerRadius={outerRadius + 10} />
                   <Sector
                     {...props}
-                    outerRadius={outerRadius + 25}
+                    outerRadius={outerRadius + 18}
                     innerRadius={outerRadius + 12}
                   />
                 </g>
@@ -132,15 +132,15 @@ export function ChartPieInteractive() {
                       <tspan
                         x={cx}
                         y={cy - 10}
-                        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold"
+                        className="text-5xl sm:text-6xl md:text-3xl lg:text-5xl font-bold"
                         style={{ fill: activeColor }}
                       >
                         {desktopData[activeIndex].desktop.toLocaleString()}
                       </tspan>
                       <tspan
                         x={cx}
-                        y={cy + (window.innerWidth < 640 ? 30 : 55)}
-                        className="fill-white/50 text-base sm:text-lg md:text-2xl lg:text-2xl"
+                        y={cy + (window.innerWidth < 640 ? 30 : 25)}
+                        className="fill-white/50 text-lg md:text-base"
                       >
                         Visitors
                       </tspan>
