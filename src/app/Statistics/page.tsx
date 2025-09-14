@@ -46,7 +46,7 @@ export default function Statistics() {
         
         {/* Bar Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
-          <div className="w-full md:w-5/6 h-[300px] md:h-[175px] lg:h-[200px] -m-2">
+          <div className="w-full md:w-5/6 h-[300px] md:h-[175px] lg:h-[200px] -m-2 mb-40 md:mb-0">
             <ChartBarStacked />
           </div>
         </div>
