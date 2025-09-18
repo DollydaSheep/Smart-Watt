@@ -70,7 +70,7 @@ export function ChartBarStacked() {
   })
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col ">
       <h3 className="text-center font-bold text-white/50 text-lg mb-2">DEVICE USAGE</h3>
       <div className="flex-1 relative">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
@@ -95,9 +95,9 @@ export function ChartBarStacked() {
           </button>
         </div>
 
-        <div {...swipeHandlers} className="h-full w-full">
+        <div {...swipeHandlers} className="h-full w-5/5 md:w-full place-self-center">
           <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={visibleData}>
+            <BarChart accessibilityLayer data={visibleData} className="w-full h-full">
               <CartesianGrid vertical={false} stroke="#202020" />
               <XAxis
                 dataKey="month"
