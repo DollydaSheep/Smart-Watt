@@ -29,7 +29,7 @@ export default function Statistics() {
       </div>
 
       {/* Bottom Section - Three Column Layout */}
-      <div className="grid h-full grid-cols-1 lg:grid-row-3 gap-6 mt-20 md:mt-4">
+      <div className="grid md:h-full grid-cols-1 lg:grid-row-3 gap-6">
         {/* Pie Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
           <div className="w-full h-[300px] md:h-[175px] lg:h-[200px] -m-2">
@@ -46,7 +46,7 @@ export default function Statistics() {
         
         {/* Bar Chart */}
         <div className="bg-card rounded-xl p-4 overflow-hidden">
-          <div className="w-full h-[300px] md:h-[175px] lg:h-[200px] -m-2 mb-40 md:mb-0">
+          <div className="w-full h-full md:h-[175px] lg:h-[200px] -m-2 mb-10 md:mb-0">
             <ChartBarStacked />
           </div>
         </div>

@@ -25,3 +25,4 @@
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "Components/Donutchart.jsx", "Components/Donutchart.jsx", "Components/Donutchart.jsx", "src/components/sidemenu.jsx", "src/components/barchart"],
   "exclude": ["node_modules"]
 }
+
