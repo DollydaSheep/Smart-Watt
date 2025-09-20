@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import type { SphereData } from './Sphere3D';
+import { TrendingUp } from 'lucide-react';
 
 // Dynamically import the 3D sphere with SSR disabled
 const Sphere3D = dynamic(
@@ -66,7 +67,15 @@ export function Visualization3D() {
     <div className="w-full max-w-2xl mx-auto md:mx-0 md:w-1/2 lg:w-2/5 xl:w-1/3 -mt-3 md:mt-0 flex flex-col items-center ">
       {/* Label showing sphere data */}
       <div className="w-full bg-gray-100 dark:bg-[#161617] rounded-lg p-4 mb-2">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Connected Devices</h3>
+        <div className='flex justify-between items-center mb-2'>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white">Connected Devices</h3>
+          <div className='flex items-center'>
+            <div 
+              className="w-1.5 h-1.5 rounded-full mr-2 bg-green-300"
+            />
+            <span className='text-xs text-green-300'>4 Devices</span>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {sphereDataWithPercentage.map((device) => (
             <div key={device.id} className="flex items-center">
@@ -74,9 +83,22 @@ export function Visualization3D() {
                 className="w-3 h-3 rounded-full mr-2"
                 style={{ backgroundColor: device.color }}
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">
-                {device.name} ({device.percentage}%)
-              </span>
+              <div className='flex justify-between items-center w-full'>
+                <span className="text-sm text-gray-700 dark:text-gray-300 font-semibold">
+                  {device.name}
+                </span>
+                <div className='flex items-center gap-1'>
+                  <TrendingUp className='text-green-300 size-4'/>
+                  <div className='flex flex-col'>
+                    <span className='text-sm text-gray-700 dark:text-gray-300 font-semibold'>
+                      ({device.percentage}%)
+                    </span>
+                    <span className='text-xs text-gray-800 dark:text-gray-400 font-light'>
+                      0.3kW
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
