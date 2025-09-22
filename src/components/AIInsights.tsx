@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingUp, Lightbulb, Zap, BarChart2 } from "lucide-react"
+import { Lightbulb, Zap, BarChart2 } from "lucide-react"
 import { motion } from "framer-motion"
 
 export function AIInsights() {

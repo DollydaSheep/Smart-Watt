@@ -5,21 +5,6 @@ import Image from "next/image";
 import { Visualization3D } from "@/components/Visualization3D";
 import { HomeUsage } from "@/components/homeusage";
 
-// Chart-based color palette for dynamic assignment
-const chartColors = [
-  '#10b981', // Emerald
-  '#3b82f6', // Blue
-  '#f59e0b', // Amber
-  '#ef4444', // Red
-  '#8b5cf6', // Violet
-  '#06b6d4', // Cyan
-  '#84cc16', // Lime
-  '#f97316', // Orange
-  '#ec4899', // Pink
-  '#6366f1', // Indigo
-  '#14b8a6', // Teal
-  '#eab308', // Yellow
-];
 
 // All available devices - easily expandable
 const allDevices = [
@@ -35,15 +20,6 @@ const allDevices = [
   { name: 'Gaming Console', percentage: 18, power: '0.22 kW' },
 ];
 
-// Shuffle array using Fisher-Yates algorithm
-const shuffleArray = (array: any[]): any[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-};
 
 // Fixed color assignments for consistent device colors
 const deviceColors: { [key: string]: string } = {

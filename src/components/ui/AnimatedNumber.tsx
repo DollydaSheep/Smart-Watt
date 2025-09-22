@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 interface AnimatedNumberProps {
   value: number;
@@ -8,6 +8,9 @@ interface AnimatedNumberProps {
   format?: (value: number) => string | number;
   className?: string;
 }
+
+// Easing function for smooth animation
+const easeOutQuad = (t: number) => t * (2 - t);
 
 export function AnimatedNumber({
   value,
@@ -20,7 +23,7 @@ export function AnimatedNumber({
   const startTimeRef = useRef<number | null>(null);
   const startValue = useRef(0);
 
-  const animate = (timestamp: number) => {
+  const animate = useCallback((timestamp: number) => {
     if (startTimeRef.current === null) {
       startTimeRef.current = timestamp;
     }
@@ -36,10 +39,7 @@ export function AnimatedNumber({
     } else {
       setDisplayValue(value);
     }
-  };
-
-  // Easing function for smooth animation
-  const easeOutQuad = (t: number) => t * (2 - t);
+  }, [value, duration]);
 
   useEffect(() => {
     startValue.current = displayValue;
@@ -53,7 +53,7 @@ export function AnimatedNumber({
         requestRef.current = null;
       }
     };
-  }, [value, duration]);
+  }, [value, duration, animate]);
 
   // Format the display value
   const formattedValue = format(displayValue);

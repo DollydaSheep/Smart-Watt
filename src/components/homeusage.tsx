@@ -134,7 +134,7 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [activeIndex])
+  }, [activeIndex, handleMouseMove])
 
   const goToSlide = (index: number) => {
     setActiveIndex(index)
