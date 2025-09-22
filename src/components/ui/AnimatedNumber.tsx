@@ -42,6 +42,7 @@ export function AnimatedNumber({
   }, [value, duration]);
 
   useEffect(() => {
+    // Only start animation when value changes, not when displayValue changes
     startValue.current = displayValue;
     startTimeRef.current = null;
     
@@ -53,6 +54,7 @@ export function AnimatedNumber({
         requestRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration, animate]);
 
   // Format the display value

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, useAnimation } from "framer-motion"
 import { TrendingUp } from "lucide-react"
 import { AIInsights } from "./AIInsights"
@@ -107,7 +107,7 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
     isDragging.current = true
   }
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging.current) return
     const currentX = e.clientX
     const diff = startX.current - currentX
@@ -120,7 +120,7 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
       }
       isDragging.current = false
     }
-  }
+  }, [activeIndex])
 
   const handleMouseUp = () => {
     isDragging.current = false
