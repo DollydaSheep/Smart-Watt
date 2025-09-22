@@ -52,11 +52,11 @@ const generateDeviceData = () => {
   }));
 };
 
-// Shared device data for consistency
-export const deviceData = generateDeviceData();
-
 export default function Home() {
   const [powerLimit, setPowerLimit] = useState(15.0);
+  
+  // Generate device data inside component
+  const deviceData = generateDeviceData();
   
   // Calculate total usage from device data
   const totalUsage = deviceData.reduce((sum, device) => {

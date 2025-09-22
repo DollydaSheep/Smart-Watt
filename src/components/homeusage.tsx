@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, useAnimation } from "framer-motion"
 import { TrendingUp } from "lucide-react"
 import { AIInsights } from "./AIInsights"
@@ -107,26 +107,26 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
     isDragging.current = true
   }
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging.current) return
-    const currentX = e.clientX
-    const diff = startX.current - currentX
-    
-    if (Math.abs(diff) > 50) { // Threshold for swipe
-      if (diff > 0 && activeIndex < 3) {
-        setActiveIndex(prev => prev + 1)
-      } else if (diff < 0 && activeIndex > 0) {
-        setActiveIndex(prev => prev - 1)
-      }
-      isDragging.current = false
-    }
-  }, [activeIndex])
-
   const handleMouseUp = () => {
     isDragging.current = false
   }
 
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return
+      const currentX = e.clientX
+      const diff = startX.current - currentX
+      
+      if (Math.abs(diff) > 50) { // Threshold for swipe
+        if (diff > 0 && activeIndex < 3) {
+          setActiveIndex(prev => prev + 1)
+        } else if (diff < 0 && activeIndex > 0) {
+          setActiveIndex(prev => prev - 1)
+        }
+        isDragging.current = false
+      }
+    }
+
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
     
@@ -134,7 +134,7 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [activeIndex, handleMouseMove])
+  }, [activeIndex])
 
   const goToSlide = (index: number) => {
     setActiveIndex(index)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface AnimatedNumberProps {
   value: number;
@@ -22,29 +22,33 @@ export function AnimatedNumber({
   const requestRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const startValue = useRef(0);
-
-  const animate = useCallback((timestamp: number) => {
-    if (startTimeRef.current === null) {
-      startTimeRef.current = timestamp;
-    }
-    
-    const startTime = startTimeRef.current || timestamp;
-    const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-    const current = startValue.current + (value - startValue.current) * easeOutQuad(progress);
-    
-    setDisplayValue(current);
-    
-    if (progress < 1) {
-      requestRef.current = requestAnimationFrame(animate);
-    } else {
-      setDisplayValue(value);
-    }
-  }, [value, duration]);
+  const previousValue = useRef(0);
 
   useEffect(() => {
-    // Only start animation when value changes, not when displayValue changes
+    // Only animate when value actually changes
+    if (previousValue.current === value) return;
+    
+    previousValue.current = value;
     startValue.current = displayValue;
     startTimeRef.current = null;
+    
+    const animate = (timestamp: number) => {
+      if (startTimeRef.current === null) {
+        startTimeRef.current = timestamp;
+      }
+      
+      const startTime = startTimeRef.current || timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      const current = startValue.current + (value - startValue.current) * easeOutQuad(progress);
+      
+      setDisplayValue(current);
+      
+      if (progress < 1) {
+        requestRef.current = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(value);
+      }
+    };
     
     requestRef.current = requestAnimationFrame(animate);
     
@@ -54,8 +58,7 @@ export function AnimatedNumber({
         requestRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, duration, animate]);
+  }, [value, duration, displayValue]);
 
   // Format the display value
   const formattedValue = format(displayValue);
