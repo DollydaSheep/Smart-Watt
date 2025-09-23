@@ -68,15 +68,12 @@ interface Device {
 
 interface HomeUsageProps {
   devices: Device[];
-  totalDevices: number;
   totalUsage: number;
   powerLimit: number;
   onPowerLimitChange: (limit: number) => void;
 }
 
-export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPowerLimitChange }: HomeUsageProps) {
-  // Use all devices for display
-  const displayDevices = devices;
+export function HomeUsage({ devices, totalUsage, powerLimit, onPowerLimitChange }: HomeUsageProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const startX = useRef(0)
@@ -107,26 +104,26 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
     isDragging.current = true
   }
 
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging.current) return
+    const currentX = e.clientX
+    const diff = startX.current - currentX
+    
+    if (Math.abs(diff) > 50) { // Threshold for swipe
+      if (diff > 0 && activeIndex < 3) {
+        setActiveIndex(prev => prev + 1)
+      } else if (diff < 0 && activeIndex > 0) {
+        setActiveIndex(prev => prev - 1)
+      }
+      isDragging.current = false
+    }
+  }
+
   const handleMouseUp = () => {
     isDragging.current = false
   }
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging.current) return
-      const currentX = e.clientX
-      const diff = startX.current - currentX
-      
-      if (Math.abs(diff) > 50) { // Threshold for swipe
-        if (diff > 0 && activeIndex < 3) {
-          setActiveIndex(prev => prev + 1)
-        } else if (diff < 0 && activeIndex > 0) {
-          setActiveIndex(prev => prev - 1)
-        }
-        isDragging.current = false
-      }
-    }
-
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
     
@@ -250,12 +247,12 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
               <div className='flex items-center'>
                 <div className="w-1.5 h-1.5 rounded-full mr-2 bg-green-300" />
                 <span className='text-xs text-green-300'>
-                  {totalDevices} Devices
+                  {devices.length} Devices
                 </span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {displayDevices.map((device) => (
+              {devices.map((device) => (
                 <div key={device.id} className="flex items-center">
                   <div 
                     className="w-3 h-3 rounded-full mr-2"
@@ -266,7 +263,7 @@ export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPow
                       {device.name}
                     </span>
                     <div className='flex items-center gap-1'>
-                      <TrendingUp className='size-4' style={{ color: device.color }}/>
+                      <TrendingUp className='text-green-300 size-4'/>
                       <div className='flex flex-col'>
                         <span className='text-sm text-gray-700 dark:text-gray-300 font-semibold'>
                           ({device.percentage}%)

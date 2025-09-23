@@ -5,58 +5,40 @@ import Image from "next/image";
 import { Visualization3D } from "@/components/Visualization3D";
 import { HomeUsage } from "@/components/homeusage";
 
-
-// All available devices - easily expandable
-const allDevices = [
-  { name: 'Oven', percentage: 35, power: '0.42 kW' },
-  { name: 'PC', percentage: 20, power: '0.24 kW' },
-  { name: 'Refrigerator', percentage: 30, power: '0.36 kW' },
-  { name: 'TV', percentage: 15, power: '0.18 kW' },
-  { name: 'Washing Machine', percentage: 25, power: '0.30 kW' },
-  { name: 'Air Conditioner', percentage: 40, power: '0.48 kW' },
-  { name: 'Microwave', percentage: 12, power: '0.14 kW' },
-  { name: 'Dishwasher', percentage: 28, power: '0.34 kW' },
-  { name: 'Water Heater', percentage: 45, power: '0.54 kW' },
-  { name: 'Gaming Console', percentage: 18, power: '0.22 kW' },
+// Shared device data for consistency
+export const deviceData = [
+  { 
+    id: 1, 
+    name: 'Oven', 
+    color: '#10b981',
+    percentage: 35,
+    power: '0.3 kW'
+  },
+  { 
+    id: 2, 
+    name: 'PC', 
+    color: 'white',
+    percentage: 20,
+    power: '0.3 kW'
+  },
+  { 
+    id: 3, 
+    name: 'Refrigerator', 
+    color: '#9333ea',
+    percentage: 30,
+    power: '0.3 kW'
+  },
+  { 
+    id: 4, 
+    name: 'TV', 
+    color: '#3b82f6',
+    percentage: 15,
+    power: '0.3 kW'
+  },
 ];
-
-
-// Fixed color assignments for consistent device colors
-const deviceColors: { [key: string]: string } = {
-  'Oven': '#10b981',
-  'PC': '#3b82f6',
-  'Refrigerator': '#f59e0b',
-  'TV': '#ef4444',
-  'Washing Machine': '#8b5cf6',
-  'Air Conditioner': '#06b6d4',
-  'Microwave': '#84cc16',
-  'Dishwasher': '#f97316',
-  'Water Heater': '#ec4899',
-  'Gaming Console': '#6366f1'
-};
-
-// Generate device data with consistent colors for top 4 power consumers
-const generateDeviceData = () => {
-  // Sort devices by power consumption (highest first) and take top 4
-  const sortedDevices = [...allDevices]
-    .sort((a, b) => parseFloat(b.power) - parseFloat(a.power))
-    .slice(0, 4);
-  
-  // Assign consistent colors based on device name
-  return sortedDevices.map((device, index) => ({
-    id: index + 1,
-    name: device.name,
-    color: deviceColors[device.name] || '#000000', // Fallback to black if device not found
-    percentage: device.percentage,
-    power: device.power
-  }));
-};
 
 export default function Home() {
   const [powerLimit, setPowerLimit] = useState(15.0);
-  
-  // Generate device data inside component
-  const deviceData = generateDeviceData();
   
   // Calculate total usage from device data
   const totalUsage = deviceData.reduce((sum, device) => {
@@ -80,7 +62,6 @@ export default function Home() {
           </div>
           <HomeUsage 
             devices={deviceData}
-            totalDevices={allDevices.length}
             totalUsage={totalUsage}
             powerLimit={powerLimit}
             onPowerLimitChange={setPowerLimit}

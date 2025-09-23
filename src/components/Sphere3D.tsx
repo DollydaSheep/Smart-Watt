@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -27,89 +27,12 @@ const getSphereSize = (percentage: number) => {
   return 0.1 + Math.pow(normalizedPercentage, 0.7) * 0.8; // Size between 0.1 and 0.9 with exponential curve
 };
 
-// Generate positions on the surface of the power limiter sphere with good spacing
-const generateRandomPositions = (deviceCount: number) => {
-  const positions: Array<{x: number, y: number, z: number}> = [];
-  const minDistance = 1.2; // Minimum angular distance between devices (in radians)
-  const maxAttempts = 200; // Increased maximum attempts for better positioning
-  const radius = 1.0; // Place spheres on the surface of the limiter
-  
-  // Golden ratio based distribution for uniform spacing
-  const phi = Math.PI * (3 - Math.sqrt(5)); // Golden angle in radians
-  
-  for (let i = 0; i < deviceCount; i++) {
-    let validPosition = false;
-    let attempts = 0;
-    let newPosition = { x: 0, y: 0, z: 0 };
-    
-    while (!validPosition && attempts < maxAttempts) {
-      // Use Fibonacci sphere algorithm for initial placement
-      const y = 1 - (i / (deviceCount - 1)) * 2; // y goes from 1 to -1
-      const radiusAtY = Math.sqrt(1 - y * y); // radius at y
-      
-      // Golden angle increment
-      const theta = phi * i;
-      
-      // Convert spherical to cartesian coordinates
-      newPosition = {
-        x: radiusAtY * Math.cos(theta) * radius,
-        y: y * radius,
-        z: radiusAtY * Math.sin(theta) * radius
-      };
-      
-      // Add some random jitter to break perfect symmetry
-      if (deviceCount > 4) {
-        const jitter = 0.3;
-        newPosition.x += (Math.random() - 0.5) * jitter;
-        newPosition.y += (Math.random() - 0.5) * jitter;
-        newPosition.z += (Math.random() - 0.5) * jitter;
-        
-        // Re-normalize to sphere surface
-        const length = Math.sqrt(
-          newPosition.x * newPosition.x + 
-          newPosition.y * newPosition.y + 
-          newPosition.z * newPosition.z
-        );
-        newPosition.x = (newPosition.x / length) * radius;
-        newPosition.y = (newPosition.y / length) * radius;
-        newPosition.z = (newPosition.z / length) * radius;
-      }
-      
-      // Check collision with existing positions
-      validPosition = true;
-      for (const existingPos of positions) {
-        // Calculate angular distance between points on sphere
-        const dot = (
-          newPosition.x * existingPos.x + 
-          newPosition.y * existingPos.y + 
-          newPosition.z * existingPos.z
-        );
-        const angle = Math.acos(Math.min(Math.max(dot, -1), 1)); // Clamp for floating point errors
-        
-        if (angle < minDistance) {
-          validPosition = false;
-          break;
-        }
-      }
-      
-      attempts++;
-      
-      // If we're stuck, try a completely random position
-      if (attempts > maxAttempts / 2) {
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        newPosition = {
-          x: Math.sin(phi) * Math.cos(theta) * radius,
-          y: Math.sin(phi) * Math.sin(theta) * radius,
-          z: Math.cos(phi) * radius
-        };
-      }
-    }
-    
-    positions.push(newPosition);
-  }
-  
-  return positions;
+// Calculate radius from center - devices stick to limiter edge with subtle variations
+const getRadiusFromCenter = (percentage: number) => {
+  const normalizedPercentage = percentage / 100;
+  // Base radius at limiter edge (1.0) with subtle proximity effect
+  const proximityVariation = normalizedPercentage * 0.15; // Small variation for higher usage
+  return 1.0 - proximityVariation; // Radius between 0.85 and 1.0 (staying close to limiter edge)
 };
 
 function SmallSphere({ size, color, position, onHover, onClick }: { 
@@ -176,13 +99,13 @@ function PowerLimiter({ totalUsage, powerLimit }: { totalUsage: number; powerLim
   return (
     <group>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1, 32, 32]} />
+        <sphereGeometry args={[1, 25, 25]} />
         <meshBasicMaterial 
           color={color}
           wireframe
           transparent
           opacity={0.8}
-          wireframeLinewidth={2}
+          wireframeLinewidth={1}
         />
       </mesh>
       <Html
@@ -208,11 +131,6 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
   const [hoveredDeviceId, setHoveredDeviceId] = useState<number | null>(null);
   const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  
-  // Generate positions with collision avoidance
-  const devicePositions = useMemo(() => {
-    return generateRandomPositions(devices.length);
-  }, [devices.length]);
 
   // Detect mobile device
   useEffect(() => {
@@ -289,9 +207,12 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
       {/* Power Limiter - Center sphere */}
       <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} />
       
-      {/* Device spheres positioned organically around the center */}
+      {/* Device spheres positioned around the center with proximity effect */}
       {devices.map((device, index) => {
-        const position = devicePositions[index];
+        const angle = (index / devices.length) * Math.PI * 2;
+        const radius = getRadiusFromCenter(device.percentage);
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
         const size = getSphereSize(device.percentage);
         const isHovered = hoveredDeviceId === device.id;
         const isSelected = selectedDeviceId === device.id;
@@ -302,7 +223,7 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
             <SmallSphere 
               size={size}
               color={device.color} 
-              position={[position.x, position.y, position.z]}
+              position={[x, 0, z]}
               onHover={(hovered) => !isMobile && setHoveredDeviceId(hovered ? device.id : null)}
               onClick={() => {
                 if (isMobile) {
@@ -314,7 +235,7 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
               <Html
                 as='div'
                 wrapperClass="label"
-                position={[position.x, position.y - 0.6, position.z]}
+                position={[x, -0.6, z]}
                 center
               >
                 <div className="text-center text-xs" style={{ color: device.color }}>
