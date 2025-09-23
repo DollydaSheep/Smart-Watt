@@ -8,13 +8,17 @@ interface PowerLimiterControlProps {
   currentUsage: number;
   powerLimit: number;
   onLimitChange: (newLimit: number) => void;
+  isActive?: boolean;
 }
 
-export function PowerLimiterControl({ currentUsage, powerLimit, onLimitChange }: PowerLimiterControlProps) {
+export function PowerLimiterControl({ currentUsage, powerLimit, onLimitChange, isActive = true }: PowerLimiterControlProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [tempLimit, setTempLimit] = useState(powerLimit);
 
   const usagePercentage = (currentUsage / powerLimit) * 100;
+
+  // Auto-collapse when not active
+  const shouldShowExpanded = isOpen && isActive;
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +76,7 @@ export function PowerLimiterControl({ currentUsage, powerLimit, onLimitChange }:
 
       {/* Expanded State */}
       <AnimatePresence>
-        {isOpen && (
+        {shouldShowExpanded && (
           <motion.div
             initial={{ opacity: 0, height: 0, marginTop: 0 }}
             animate={{ opacity: 1, height: 'auto', marginTop: 8 }}

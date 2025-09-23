@@ -4,15 +4,10 @@ import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { Device } from '@/data/deviceData';
 
-// Types
-export type DeviceData = {
-  id: number;
-  name: string;
-  color: string;
-  percentage: number;
-  power: string;
-};
+// Use Device type from data layer
+export type DeviceData = Device;
 
 export type Sphere3DProps = {
   devices: DeviceData[];
@@ -43,10 +38,23 @@ function SmallSphere({ size, color, position, onHover, onClick }: {
   onClick: () => void;
 }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null!);
+  const targetColorRef = useRef(new THREE.Color(color));
+  const currentColorRef = useRef(new THREE.Color(color));
   
-  // Add subtle pulsing animation
+  // Update target color when prop changes
+  useEffect(() => {
+    targetColorRef.current.set(color);
+  }, [color]);
+  
+  // Add subtle pulsing animation and smooth color transitions
   useFrame((state) => {
-    if (meshRef.current) {
+    if (meshRef.current && materialRef.current) {
+      // Smooth color transition
+      currentColorRef.current.lerp(targetColorRef.current, 0.1);
+      materialRef.current.color.copy(currentColorRef.current);
+      
+      // Pulsing animation
       const pulse = Math.sin(state.clock.getElapsedTime() * 2) * 0.1 + 1;
       meshRef.current.scale.setScalar(size * pulse);
     }
@@ -60,9 +68,9 @@ function SmallSphere({ size, color, position, onHover, onClick }: {
       onPointerLeave={() => onHover(false)}
       onClick={onClick}
     >
-      <sphereGeometry args={[1, 16, 16]} />
+      <sphereGeometry args={[1, 32, 32]} />
       <meshBasicMaterial 
-        color={color}
+        ref={materialRef}
         transparent
         opacity={0.9}
       />
@@ -72,40 +80,53 @@ function SmallSphere({ size, color, position, onHover, onClick }: {
 
 function PowerLimiter({ totalUsage, powerLimit }: { totalUsage: number; powerLimit: number }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null!);
+  const targetColorRef = useRef(new THREE.Color('#10b981'));
+  const currentColorRef = useRef(new THREE.Color('#10b981'));
   
   // Calculate usage percentage and determine color
   const usagePercentage = (totalUsage / powerLimit) * 100;
   const isOverLimit = usagePercentage > 100;
   const isNearLimit = usagePercentage >= 80;
   
-  // Color logic: green (0-79%) -> yellow (80-99%) -> red (100%+)
-  let color = '#10b981'; // Green
-  if (isOverLimit) {
-    color = '#ef4444'; // Red
-  } else if (isNearLimit) {
-    color = '#f59e0b'; // Yellow/Orange
-  }
+  // Update target color based on usage
+  useEffect(() => {
+    if (isOverLimit) {
+      targetColorRef.current.set('#ef4444'); // Red
+    } else if (isNearLimit) {
+      targetColorRef.current.set('#f59e0b'); // Yellow/Orange
+    } else {
+      targetColorRef.current.set('#10b981'); // Green
+    }
+  }, [isOverLimit, isNearLimit]);
   
-  // Pulsing animation when over limit
+  // Pulsing animation and smooth color transitions
   useFrame((state) => {
-    if (meshRef.current && isOverLimit) {
-      const pulse = Math.sin(state.clock.getElapsedTime() * 4) * 0.2 + 1;
-      meshRef.current.scale.setScalar(pulse);
-    } else if (meshRef.current) {
-      meshRef.current.scale.setScalar(1);
+    if (meshRef.current && materialRef.current) {
+      // Smooth color transition
+      currentColorRef.current.lerp(targetColorRef.current, 0.08);
+      materialRef.current.color.copy(currentColorRef.current);
+      
+      // Pulsing animation when over limit
+      if (isOverLimit) {
+        const pulse = Math.sin(state.clock.getElapsedTime() * 4) * 0.2 + 1;
+        meshRef.current.scale.setScalar(pulse);
+      } else {
+        meshRef.current.scale.setScalar(1);
+      }
     }
   });
 
   return (
     <group>
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1, 25, 25]} />
+        <sphereGeometry args={[1, 30, 30]} />
         <meshBasicMaterial 
-          color={color}
+          ref={materialRef}
           wireframe
           transparent
-          opacity={0.8}
-          wireframeLinewidth={1}
+          opacity={0.9}
+          wireframeLinewidth={2}
         />
       </mesh>
       <Html
@@ -256,7 +277,7 @@ export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit =
   return (
     <div className="w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 3], fov: 50 }}
+        camera={{ position: [0, 0, 3], fov: 60 }}
         style={{
           width: '100%',
           height: '100%',
@@ -267,8 +288,10 @@ export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit =
           antialias: true,
           alpha: false, // Disable alpha for solid background
           powerPreference: 'high-performance',
+          precision: 'highp', // High precision for better quality
+          logarithmicDepthBuffer: true, // Better depth precision
         }}
-        dpr={[1, 2]}
+        dpr={[1, 3]} // Higher device pixel ratio for HD displays
       >
         <color attach="background" args={['#09090B']} />
         <ambientLight intensity={0.3} />
