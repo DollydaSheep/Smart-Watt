@@ -155,7 +155,7 @@ export function HomeUsage({ totalUsage, powerLimit, onPowerLimitChange }: HomeUs
   return (
     <div className="w-full">
       <div 
-        className="w-full bg-gray-100 dark:bg-[#161617] rounded-3xl p-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#1a1a1b] transition-colors duration-200"
+        className="w-full bg-[#161617] rounded-3xl p-4 cursor-pointer hover:bg-[#1a1a1b] transition-colors duration-200"
         onClick={() => setIsPanelOpen(!isPanelOpen)}
       >
         <div className="flex items-center gap-3 mb-2">
