@@ -2,10 +2,18 @@
 
 import React from 'react';
 
+interface Device {
+  id: number;
+  name: string;
+  powerValue: number;
+  percentage: number;
+  color: string;
+}
+
 interface OptimizeDetailedProps {
   totalUsage: number;
   powerLimit: number;
-  devices: any[];
+  devices: Device[];
 }
 
 export const OptimizeDetailed: React.FC<OptimizeDetailedProps> = ({ totalUsage, powerLimit, devices }) => {

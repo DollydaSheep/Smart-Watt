@@ -24,7 +24,6 @@ export const Devices: React.FC<DevicesProps> = ({ devices, onClick }) => {
     devices[0] || { name: 'None', powerValue: 0, power: '0 kW', percentage: 0 }
   );
   
-  const highUsageDevices = devices.filter(d => d.percentage > 80).length;
 
   // Use the highest consuming device's color for the container with transparency
   const getBackgroundColor = () => {

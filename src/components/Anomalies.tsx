@@ -2,10 +2,18 @@
 
 import React from 'react';
 
+interface Device {
+  id: number;
+  name: string;
+  powerValue: number;
+  percentage: number;
+  color: string;
+}
+
 interface AnomaliesProps {
   totalUsage: number;
   powerLimit: number;
-  devices: any[];
+  devices: Device[];
   onClick?: () => void;
 }
 
@@ -24,7 +32,6 @@ export const Anomalies: React.FC<AnomaliesProps> = ({ totalUsage, powerLimit, de
   if (isNearLimit && !isOverLimit) anomalyCount += 1; // Near limit is a warning
   anomalyCount += highUsageDevices.length; // Add high usage devices
   
-  const lastDetected = "2 min ago";
 
   const getAnomalyLevel = () => {
     // Prioritize over limit as critical (red)

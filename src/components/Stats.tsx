@@ -9,9 +9,8 @@ interface StatsProps {
   onClick?: () => void;
 }
 
-export const Stats: React.FC<StatsProps> = ({ totalUsage, powerLimit, totalDevices, onClick }) => {
+export const Stats: React.FC<StatsProps> = ({ totalUsage, powerLimit, onClick }) => {
   const usagePercentage = (totalUsage / powerLimit) * 100;
-  const efficiency = Math.max(0, 100 - (usagePercentage - 80));
 
   return (
     <div 

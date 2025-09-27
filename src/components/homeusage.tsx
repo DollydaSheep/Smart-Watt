@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { TrendingUp, ChevronRight, ChevronDown, DollarSign } from "lucide-react"
+import { TrendingUp, ChevronRight, DollarSign } from "lucide-react"
 import { Device } from "@/data/deviceData"
 import { PowerLimiterControl } from "./PowerLimiterControl"
 
@@ -97,9 +97,7 @@ interface HomeUsageProps {
   onPowerLimitChange: (limit: number) => void;
 }
 
-export function HomeUsage({ devices, totalDevices, totalUsage, powerLimit, onPowerLimitChange }: HomeUsageProps) {
-  // Use all devices for display
-  const displayDevices = devices;
+export function HomeUsage({ totalUsage, powerLimit, onPowerLimitChange }: HomeUsageProps) {
   
   // Slide panel state
   const [isPanelOpen, setIsPanelOpen] = useState(false);

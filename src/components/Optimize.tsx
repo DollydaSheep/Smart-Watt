@@ -2,10 +2,18 @@
 
 import React from 'react';
 
+interface Device {
+  id: number;
+  name: string;
+  powerValue: number;
+  percentage: number;
+  color: string;
+}
+
 interface OptimizeProps {
   totalUsage: number;
   powerLimit: number;
-  devices: any[];
+  devices: Device[];
   onClick?: () => void;
 }
 
@@ -48,7 +56,8 @@ export const Optimize: React.FC<OptimizeProps> = ({ totalUsage, powerLimit, devi
     return suggestions.slice(0, 2);
   };
 
-  const suggestions = getOptimizationSuggestions();
+  // Get optimization suggestions for display
+  getOptimizationSuggestions();
 
   return (
     <div 

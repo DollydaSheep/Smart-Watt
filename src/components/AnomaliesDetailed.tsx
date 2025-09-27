@@ -2,10 +2,18 @@
 
 import React from 'react';
 
+interface Device {
+  id: number;
+  name: string;
+  powerValue: number;
+  percentage: number;
+  color: string;
+}
+
 interface AnomaliesDetailedProps {
   totalUsage: number;
   powerLimit: number;
-  devices: any[];
+  devices: Device[];
 }
 
 export const AnomaliesDetailed: React.FC<AnomaliesDetailedProps> = ({ totalUsage, powerLimit, devices }) => {
