@@ -13,6 +13,7 @@ export type Sphere3DProps = {
   devices: DeviceData[];
   totalUsage: number;
   powerLimit?: number;
+  showLabels?: boolean;
 };
 
 // Base size for spheres with dramatic scaling
@@ -78,7 +79,7 @@ function SmallSphere({ size, color, position, onHover, onClick }: {
   );
 }
 
-function PowerLimiter({ totalUsage, powerLimit }: { totalUsage: number; powerLimit: number }) {
+function PowerLimiter({ totalUsage, powerLimit, showLabels = false }: { totalUsage: number; powerLimit: number; showLabels?: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null!);
   const materialRef = useRef<THREE.MeshBasicMaterial>(null!);
   const targetColorRef = useRef(new THREE.Color('#10b981'));
@@ -129,23 +130,25 @@ function PowerLimiter({ totalUsage, powerLimit }: { totalUsage: number; powerLim
           wireframeLinewidth={2}
         />
       </mesh>
-      <Html
-        as='div'
-        wrapperClass="label"
-        position={[0, -1.3, 0]}
-        center
-      >
-        <div className={`text-center text-xs ${isOverLimit ? 'text-red-400' : isNearLimit ? 'text-yellow-400' : 'text-emerald-500'}`}>
-          <div>Power Limiter</div>
-          <div className="text-xs opacity-75">{totalUsage.toFixed(1)}/{powerLimit} kW</div>
-          <div className="text-xs opacity-75">({usagePercentage.toFixed(0)}%)</div>
-        </div>
-      </Html>
+      {showLabels && (
+        <Html
+          as='div'
+          wrapperClass="label"
+          position={[0, -1.3, 0]}
+          center
+        >
+          <div className={`text-center text-xs ${isOverLimit ? 'text-red-400' : isNearLimit ? 'text-yellow-400' : 'text-emerald-500'}`}>
+            <div>Power Limiter</div>
+            <div className="text-xs opacity-75">{totalUsage.toFixed(1)}/{powerLimit} kW</div>
+            <div className="text-xs opacity-75">({usagePercentage.toFixed(0)}%)</div>
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
 
-function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; totalUsage: number; powerLimit: number }) {
+function Sphere({ devices, totalUsage, powerLimit, showLabels = false }: { devices: DeviceData[]; totalUsage: number; powerLimit: number; showLabels?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const introStartTime = useRef<number | null>(null);
   const rotationStartTime = useRef<number | null>(null);
@@ -226,7 +229,7 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
   return (
     <group ref={groupRef}>
       {/* Power Limiter - Center sphere */}
-      <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} />
+      <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} showLabels={showLabels} />
       
       {/* Device spheres positioned around the center with proximity effect */}
       {devices.map((device, index) => {
@@ -237,7 +240,7 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
         const size = getSphereSize(device.percentage);
         const isHovered = hoveredDeviceId === device.id;
         const isSelected = selectedDeviceId === device.id;
-        const shouldShowLabel = isMobile ? isSelected : isHovered;
+        const shouldShowLabel = showLabels || (isMobile ? isSelected : isHovered);
         
         return (
           <group key={device.id}>
@@ -273,7 +276,7 @@ function Sphere({ devices, totalUsage, powerLimit }: { devices: DeviceData[]; to
   );
 }
 
-export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit = 12 }: Sphere3DProps) {
+export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit = 12, showLabels = false }: Sphere3DProps) {
   return (
     <div className="w-full h-full">
       <Canvas
@@ -302,7 +305,7 @@ export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit =
           position={[0, -1, 0]}
           rotation={[0, 0, 0]}
         />
-        <Sphere devices={devices} totalUsage={totalUsage} powerLimit={powerLimit} />
+        <Sphere devices={devices} totalUsage={totalUsage} powerLimit={powerLimit} showLabels={showLabels} />
         <OrbitControls 
           enableZoom={true}
           enablePan={false}
