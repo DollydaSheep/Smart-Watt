@@ -23,19 +23,6 @@ export const DevicesDetailed: React.FC<DevicesDetailedProps> = ({ devices }) => 
   const offlineDevices = devices.filter(d => !d.isOnline);
   const highUsageDevices = devices.filter(d => d.percentage > 80);
 
-  const getStatusColor = (device: Device) => {
-    if (!device.isOnline) return 'text-red-400';
-    if (device.percentage > 90) return 'text-red-400';
-    if (device.percentage > 80) return 'text-yellow-400';
-    return 'text-green-400';
-  };
-
-  const getStatusText = (device: Device) => {
-    if (!device.isOnline) return 'Offline';
-    if (device.percentage > 90) return 'Critical';
-    if (device.percentage > 80) return 'High Usage';
-    return 'Normal';
-  };
 
   return (
     <div className="space-y-6">

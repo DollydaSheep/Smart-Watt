@@ -78,7 +78,7 @@ function SmallSphere({ size, color, position, onHover, onClick }: {
   );
 }
 
-function PowerLimiter({ totalUsage, powerLimit, devices, showLabels = false }: { totalUsage: number; powerLimit: number; devices: DeviceData[]; showLabels?: boolean }) {
+function PowerLimiter({ totalUsage, powerLimit, devices }: { totalUsage: number; powerLimit: number; devices: DeviceData[]; showLabels?: boolean }) {
   const particlesRef = useRef<THREE.Points | null>(null);
   const materialRef = useRef<THREE.PointsMaterial | null>(null);
   const gridMaterialRef = useRef<THREE.MeshBasicMaterial | null>(null);
@@ -511,7 +511,7 @@ function Sphere({ devices, totalUsage, powerLimit, showLabels = false }: { devic
   return (
     <group ref={groupRef}>
       {/* Power Limiter - Center sphere */}
-      <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} devices={devices} showLabels={showLabels} />
+      <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} devices={devices} />
       
       {/* Device spheres positioned around the center with proximity effect */}
       {devices.map((device, index) => {

@@ -3,11 +3,11 @@
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from "recharts"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useSwipeable } from "react-swipeable"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent  } from "@/components/ui/chart"
-import { getCurrentDeviceData, getTotalPowerUsage } from "@/data/deviceData"
+import { getCurrentDeviceData } from "@/data/deviceData"
 
 export const description = "An interactive area chart"
 
@@ -24,7 +24,7 @@ export const ChartAreaInteractive = () => {
       return Array.from({ length: 5 }, (_, i) => {
         const day = i === 0 ? 1 : (i + 1) * 7;
         
-        const dayData: any = {
+        const dayData: Record<string, string | number> = {
           date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
           day,
         };

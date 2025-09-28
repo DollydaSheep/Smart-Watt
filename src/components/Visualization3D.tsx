@@ -25,18 +25,7 @@ interface Visualization3DProps {
 }
 
 export function Visualization3D({ devices, totalUsage, powerLimit, showLabels = false, isChartsBlurred = false }: Visualization3DProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: 'start' });
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    if (!emblaApi) return;
-    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
-    emblaApi.on('select', onSelect);
-    onSelect();
-    return () => {
-      emblaApi.off('select', onSelect);
-    };
-  }, [emblaApi]);
+  const [emblaRef] = useEmblaCarousel({ loop: false, align: 'start' });
 
   // When showLabels is false, don't render anything
   if (!showLabels) {

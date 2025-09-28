@@ -38,7 +38,7 @@ export function ChartPieInteractive() {
     return config;
   }, {} as ChartConfig);
 
-  const handlePieClick = (data: any, index: number) => {
+  const handlePieClick = (data: unknown, index: number) => {
     setActiveIndex(index)
   }
 
