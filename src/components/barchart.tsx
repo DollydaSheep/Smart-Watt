@@ -70,29 +70,25 @@ export function ChartBarStacked() {
   })
 
   return (
-    <div className="w-full h-full flex flex-col ">
+    <div className="w-full h-full flex flex-col">
       <h3 className="text-center font-bold text-white/50 text-lg mb-2">DEVICE USAGE</h3>
       <div className="flex-1 relative">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
           <button
             onClick={handleSwipeRight}
             disabled={!canSwipeLeft}
-            className={`p-2 rounded-full ${canSwipeLeft ? 'text-white hover:bg-gray-700' : 'text-gray-500'}`}
+            className={`p-2 rounded-full ${canSwipeLeft ? "text-white hover:bg-gray-700" : "text-gray-500"}`}
             aria-label="Previous month"
-          >
-           
-          </button>
+          />
         </div>
 
         <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
           <button
             onClick={handleSwipeLeft}
             disabled={!canSwipeRight}
-            className={`p-2 rounded-full ${canSwipeRight ? 'text-white hover:bg-gray-700' : 'text-gray-500'}`}
+            className={`p-2 rounded-full ${canSwipeRight ? "text-white hover:bg-gray-700" : "text-gray-500"}`}
             aria-label="Next month"
-          >
-           
-          </button>
+          />
         </div>
 
         <div {...swipeHandlers} className="h-full w-5/5 md:w-full place-self-center">
@@ -108,18 +104,8 @@ export function ChartBarStacked() {
               />
               <ChartTooltip content={<ChartTooltipContent hideLabel />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar
-                dataKey="desktop"
-                stackId="a"
-                fill="var(--color-desktop)"
-                radius={[0, 0, 4, 4]}
-              />
-              <Bar
-                dataKey="mobile"
-                stackId="a"
-                fill="var(--color-mobile)"
-                radius={[4, 4, 0, 0]}
-              />
+              <Bar dataKey="desktop" stackId="a" fill="var(--color-desktop)" radius={[0, 0, 4, 4]} />
+              <Bar dataKey="mobile" stackId="a" fill="var(--color-mobile)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ChartContainer>
         </div>
@@ -128,11 +114,12 @@ export function ChartBarStacked() {
         {Array.from({ length: Math.ceil(totalMonths / MONTHS_PER_VIEW) }).map((_, index) => (
           <div
             key={index}
-            className={`h-2 w-2 rounded-full ${Math.floor(startIndex / MONTHS_PER_VIEW) === index ? 'bg-white' : 'bg-gray-500'}`}
+            className={`h-2 w-2 rounded-full ${
+              Math.floor(startIndex / MONTHS_PER_VIEW) === index ? "bg-white" : "bg-gray-500"
+            }`}
           />
         ))}
       </div>
     </div>
   )
 }
-

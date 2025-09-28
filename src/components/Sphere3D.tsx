@@ -1,44 +1,77 @@
 'use client';
 
-import { useRef} from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { Device } from '@/data/deviceData';
 
-// Types
-export type SphereData = {
-  id: number;
-  name: string;
-  color: string;
-  size: number;
-  constantKey: string;
+// Use Device type from data layer
+export type DeviceData = Device;
+
+export type Sphere3DProps = {
+  devices: DeviceData[];
+  totalUsage: number;
+  powerLimit?: number;
+  showLabels?: boolean;
 };
 
-
-// Base size for all spheres
-const SPHERE_CONSTANTS = {
-  white: 0.3,    // All spheres will use 0.3 as the base size
-  purple: 0.4,
-  blue: 0.5,
-  wireframe: 1
+// Base size for spheres with dramatic scaling
+const getSphereSize = (percentage: number) => {
+  // Exponential scaling for more dramatic size differences
+  const normalizedPercentage = percentage / 100;
+  return 0.1 + Math.pow(normalizedPercentage, 0.7) * 0.8; // Size between 0.1 and 0.9 with exponential curve
 };
 
-function SmallSphere({ size, color, position }: { size: number; color: string; position: [number, number, number] }) {
+// Calculate radius from center - devices stick to limiter edge with subtle variations
+const getRadiusFromCenter = (percentage: number) => {
+  const normalizedPercentage = percentage / 100;
+  // Base radius at limiter edge (1.0) with subtle proximity effect
+  const proximityVariation = normalizedPercentage * 0.15; // Small variation for higher usage
+  return 1.0 - proximityVariation; // Radius between 0.85 and 1.0 (staying close to limiter edge)
+};
+
+function SmallSphere({ size, color, position, onHover, onClick }: { 
+  size: number; 
+  color: string; 
+  position: [number, number, number];
+  onHover: (isHovered: boolean) => void;
+  onClick: () => void;
+}) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null!);
+  const targetColorRef = useRef(new THREE.Color(color));
+  const currentColorRef = useRef(new THREE.Color(color));
   
-  // Add subtle pulsing animation
+  // Update target color when prop changes
+  useEffect(() => {
+    targetColorRef.current.set(color);
+  }, [color]);
+  
+  // Add subtle pulsing animation and smooth color transitions
   useFrame((state) => {
-    if (meshRef.current) {
+    if (meshRef.current && materialRef.current) {
+      // Smooth color transition
+      currentColorRef.current.lerp(targetColorRef.current, 0.1);
+      materialRef.current.color.copy(currentColorRef.current);
+      
+      // Pulsing animation
       const pulse = Math.sin(state.clock.getElapsedTime() * 2) * 0.1 + 1;
       meshRef.current.scale.setScalar(size * pulse);
     }
   });
 
   return (
-    <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[1, 16, 16]} />
+    <mesh 
+      ref={meshRef} 
+      position={position}
+      onPointerEnter={() => onHover(true)}
+      onPointerLeave={() => onHover(false)}
+      onClick={onClick}
+    >
+      <sphereGeometry args={[1, 32, 32]} />
       <meshBasicMaterial 
-        color={color}
+        ref={materialRef}
         transparent
         opacity={0.9}
       />
@@ -46,97 +79,208 @@ function SmallSphere({ size, color, position }: { size: number; color: string; p
   );
 }
 
-function Sphere() {
+function PowerLimiter({ totalUsage, powerLimit, showLabels = false }: { totalUsage: number; powerLimit: number; showLabels?: boolean }) {
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null!);
+  const targetColorRef = useRef(new THREE.Color('#10b981'));
+  const currentColorRef = useRef(new THREE.Color('#10b981'));
+  
+  // Calculate usage percentage and determine color
+  const usagePercentage = (totalUsage / powerLimit) * 100;
+  const isOverLimit = usagePercentage > 100;
+  const isNearLimit = usagePercentage >= 80;
+  
+  // Update target color based on usage
+  useEffect(() => {
+    if (isOverLimit) {
+      targetColorRef.current.set('#ef4444'); // Red
+    } else if (isNearLimit) {
+      targetColorRef.current.set('#f59e0b'); // Yellow/Orange
+    } else {
+      targetColorRef.current.set('#10b981'); // Green
+    }
+  }, [isOverLimit, isNearLimit]);
+  
+  // Pulsing animation and smooth color transitions
+  useFrame((state) => {
+    if (meshRef.current && materialRef.current) {
+      // Smooth color transition
+      currentColorRef.current.lerp(targetColorRef.current, 0.08);
+      materialRef.current.color.copy(currentColorRef.current);
+      
+      // Pulsing animation when over limit
+      if (isOverLimit) {
+        const pulse = Math.sin(state.clock.getElapsedTime() * 4) * 0.2 + 1;
+        meshRef.current.scale.setScalar(pulse);
+      } else {
+        meshRef.current.scale.setScalar(1);
+      }
+    }
+  });
+
+  return (
+    <group>
+      <mesh ref={meshRef}>
+        <sphereGeometry args={[1, 30, 30]} />
+        <meshBasicMaterial 
+          ref={materialRef}
+          wireframe
+          transparent
+          opacity={0.9}
+          wireframeLinewidth={2}
+        />
+      </mesh>
+      {showLabels && (
+        <Html
+          as='div'
+          wrapperClass="label"
+          position={[0, -1.3, 0]}
+          center
+        >
+          <div className={`text-center text-xs ${isOverLimit ? 'text-red-400' : isNearLimit ? 'text-yellow-400' : 'text-emerald-500'}`}>
+            <div>Power Limiter</div>
+            <div className="text-xs opacity-75">{totalUsage.toFixed(1)}/{powerLimit} kW</div>
+            <div className="text-xs opacity-75">({usagePercentage.toFixed(0)}%)</div>
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+function Sphere({ devices, totalUsage, powerLimit, showLabels = false }: { devices: DeviceData[]; totalUsage: number; powerLimit: number; showLabels?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
+  const introStartTime = useRef<number | null>(null);
+  const rotationStartTime = useRef<number | null>(null);
+  const [hoveredDeviceId, setHoveredDeviceId] = useState<number | null>(null);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.x = state.clock.getElapsedTime() * 0.1;
-      groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.2;
+      const currentTime = state.clock.elapsedTime;
+      
+      // Initialize intro start time
+      if (introStartTime.current === null) {
+        introStartTime.current = currentTime;
+      }
+      
+      const elapsed = currentTime - introStartTime.current;
+      const introDuration = 2.5; // 2.5 seconds for intro
+      
+      if (elapsed < introDuration) {
+        // Intro animation phase
+        const progress = Math.min(elapsed / introDuration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 4);
+        
+        // Scale animation: from 0.05 to 1.0
+        const scale = 0.05 + (0.95 * easeOut);
+        groupRef.current.scale.setScalar(scale);
+        
+        // Opacity animation: from 0 to 0.9
+        const opacity = 0.9 * Math.pow(easeOut, 0.5);
+        groupRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.material) {
+            const material = child.material as THREE.Material & { opacity?: number };
+            if (material.opacity !== undefined) {
+              material.opacity = opacity;
+            }
+          }
+        });
+        
+        // Position animation: from z = -3 to z = 0
+        groupRef.current.position.z = -3 + (3 * easeOut);
+      } else {
+        // Post-intro phase - ensure final values are set
+        groupRef.current.scale.setScalar(1);
+        groupRef.current.position.z = 0;
+        groupRef.current.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.material) {
+            const material = child.material as THREE.Material & { opacity?: number };
+            if (material.opacity !== undefined) {
+              material.opacity = 0.9;
+            }
+          }
+        });
+        
+        // Initialize rotation start time when intro completes
+        if (rotationStartTime.current === null) {
+          rotationStartTime.current = currentTime;
+        }
+        
+        // Normal rotation starting from when intro completes
+        const rotationElapsed = currentTime - rotationStartTime.current;
+        groupRef.current.rotation.x = rotationElapsed * 0.1;
+        groupRef.current.rotation.y = rotationElapsed * 0.2;
+      }
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Main wireframe sphere */}
-      <group>
-        <mesh>
-          <sphereGeometry args={[SPHERE_CONSTANTS.wireframe, 32, 32]} />
-          <meshBasicMaterial 
-            color="#10b981"
-            wireframe
-            transparent
-            opacity={0.8}
-            wireframeLinewidth={1.5}
-          />
-        </mesh>
-        <Html
-          as='div'
-          wrapperClass="label"
-          position={[0, -0.4, 0]}
-          center
-        >
-          <div className="text-emerald-500 text-center text-xs">Oven</div>
-        </Html>
-      </group>
+      {/* Power Limiter - Center sphere */}
+      <PowerLimiter totalUsage={totalUsage} powerLimit={powerLimit} showLabels={showLabels} />
       
-      {/* Small colored spheres */}
-      <group>
-        <SmallSphere 
-          size={SPHERE_CONSTANTS.white} 
-          color="white" 
-          position={[1.1, 0, 0]} 
-        />
-        <Html
-          as='div'
-          wrapperClass="label"
-          position={[1.1, -0.4, 0]}
-          center
-        >
-          <div className="text-white text-center text-xs">PC</div>
-        </Html>
-      </group>
-
-      <group>
-        <SmallSphere 
-          size={SPHERE_CONSTANTS.purple} 
-          color="#9333ea" 
-          position={[Math.cos(Math.PI * 2/3) * 1.1, 0, Math.sin(Math.PI * 2/3) * 1.1]} 
-        />
-        <Html
-          as='div'
-          wrapperClass="label"
-          position={[Math.cos(Math.PI * 2/3) * 1.1, -0.4, Math.sin(Math.PI * 2/3) * 1.1]}
-          center
-        >
-          <div className="text-[#9333ea] text-center text-xs">Refrigerator</div>
-        </Html>
-      </group>
-
-      <group>
-        <SmallSphere 
-          size={SPHERE_CONSTANTS.blue} 
-          color="#3b82f6" 
-          position={[Math.cos(Math.PI * 4/3) * 1.1, 0, Math.sin(Math.PI * 4/3) * 1.1]} 
-        />
-        <Html
-          as='div'
-          wrapperClass="label"
-          position={[Math.cos(Math.PI * 4/3) * 1.1, -0.4, Math.sin(Math.PI * 4/3) * 1.1]}
-          center
-        >
-          <div className="text-blue-500 text-center text-xs">TV</div>
-        </Html>
-      </group>
+      {/* Device spheres positioned around the center with proximity effect */}
+      {devices.map((device, index) => {
+        const angle = (index / devices.length) * Math.PI * 2;
+        const radius = getRadiusFromCenter(device.percentage);
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        const size = getSphereSize(device.percentage);
+        const isHovered = hoveredDeviceId === device.id;
+        const isSelected = selectedDeviceId === device.id;
+        const shouldShowLabel = showLabels || (isMobile ? isSelected : isHovered);
+        
+        return (
+          <group key={device.id}>
+            <SmallSphere 
+              size={size}
+              color={device.color} 
+              position={[x, 0, z]}
+              onHover={(hovered) => !isMobile && setHoveredDeviceId(hovered ? device.id : null)}
+              onClick={() => {
+                if (isMobile) {
+                  setSelectedDeviceId(selectedDeviceId === device.id ? null : device.id);
+                }
+              }}
+            />
+            {shouldShowLabel && (
+              <Html
+                as='div'
+                wrapperClass="label"
+                position={[x, -0.6, z]}
+                center
+              >
+                <div className="text-center text-xs" style={{ color: device.color }}>
+                  <div>{device.name}</div>
+                  <div className="text-xs opacity-75">{device.power}</div>
+                  <div className="text-xs opacity-75">({device.percentage}%)</div>
+                </div>
+              </Html>
+            )}
+          </group>
+        );
+      })}
     </group>
   );
 }
 
-export default function Sphere3D() {
+export default function Sphere3D({ devices = [], totalUsage = 10.3, powerLimit = 12, showLabels = false }: Sphere3DProps) {
   return (
     <div className="w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 3], fov: 50 }}
+        camera={{ position: [0, 0, 3], fov: 60 }}
         style={{
           width: '100%',
           height: '100%',
@@ -147,19 +291,21 @@ export default function Sphere3D() {
           antialias: true,
           alpha: false, // Disable alpha for solid background
           powerPreference: 'high-performance',
+          precision: 'highp', // High precision for better quality
+          logarithmicDepthBuffer: true, // Better depth precision
         }}
-        dpr={[1, 2]}
+        dpr={[1, 3]} // Higher device pixel ratio for HD displays
       >
         <color attach="background" args={['#09090B']} />
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.8} />
         <pointLight position={[-10, -10, -10]} intensity={0.2} />
         <gridHelper 
-          args={[10, 20, '#1a1a1a', '#0a0a0a']} 
-          position={[0, 0, -1.5]}
+          args={[0, 0, '#1a1a1a', 'white']} 
+          position={[0, -1, 0]}
           rotation={[0, 0, 0]}
         />
-        <Sphere />
+        <Sphere devices={devices} totalUsage={totalUsage} powerLimit={powerLimit} showLabels={showLabels} />
         <OrbitControls 
           enableZoom={true}
           enablePan={false}
