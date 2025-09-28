@@ -71,7 +71,7 @@ export const DevicesDetailed: React.FC<DevicesDetailedProps> = ({ devices }) => 
       </div>
 
       {/* Device List */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-1 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Device Status</h3>
         
         <div className="space-y-3">
@@ -97,9 +97,9 @@ export const DevicesDetailed: React.FC<DevicesDetailedProps> = ({ devices }) => 
                 </div>
                 
                 <div className="text-right">
-                  <div className={`font-semibold ${getStatusColor(device)}`}>
+                  {/* <div className={`text-font-semibold ${getStatusColor(device)}`}>
                     {getStatusText(device)}
-                  </div>
+                  </div> */}
                   <div className={`w-2 h-2 rounded-full ${
                     device.isOnline ? 'bg-green-500' : 'bg-red-500'
                   } ${device.isOnline && device.percentage > 80 ? 'animate-pulse' : ''}`} />
@@ -111,7 +111,7 @@ export const DevicesDetailed: React.FC<DevicesDetailedProps> = ({ devices }) => 
       </div>
 
       {/* Usage Distribution */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-2 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Power Distribution</h3>
         
         <div className="space-y-4">
@@ -137,7 +137,7 @@ export const DevicesDetailed: React.FC<DevicesDetailedProps> = ({ devices }) => 
       </div>
 
       {/* Device Types Summary */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-2 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Device Categories</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
