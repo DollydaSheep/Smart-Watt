@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Visualization3D } from "@/components/Visualization3D";
 import { HomeUsage } from "@/components/homeusage";
@@ -27,6 +27,8 @@ export default function Home() {
   const [totalDevices, setTotalDevices] = useState(getTotalDeviceCount());
   const [expandedComponent, setExpandedComponent] = useState<string | null>(null);
   const [showLabels, setShowLabels] = useState(false);
+  const [isVisualizationOverlayed, setIsVisualizationOverlayed] = useState(false);
+  const mainRef = React.useRef<HTMLElement>(null);
 
   // Update data periodically (simulating real-time sensor updates)
   useEffect(() => {
@@ -43,6 +45,32 @@ export default function Home() {
     return () => clearInterval(updateInterval);
   }, []);
 
+  // Simple scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const isMobile = window.innerWidth < 768;
+      if (!isMobile) return;
+      
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const shouldBlur = scrollTop > 100;
+      
+      console.log('Simple scroll - scrollTop:', scrollTop, 'shouldBlur:', shouldBlur);
+      setIsVisualizationOverlayed(shouldBlur);
+    };
+
+    // Add scroll listener to document
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Check initial state
+    handleScroll();
+    
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <div className="font-sans min-h-screen w-full">
       {/* Fixed Header */}
@@ -57,7 +85,7 @@ export default function Home() {
           />
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-white text-xs font-medium">Show Labels</span>
+          <span className="text-white text-xs font-medium">Show Charts</span>
           <button
             onClick={() => setShowLabels(!showLabels)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
@@ -75,52 +103,56 @@ export default function Home() {
       
       {/* Main Content with top padding to account for fixed header */}
       <div className="pt-20 min-h-screen flex flex-col">
-        {/* Mobile: Scrollable Layout */}
+        {/* Mobile: Sticky 3D Visualization with Overlaying Content */}
         <div className="md:hidden w-full">
-          <main className="flex flex-col w-full max-w-7xl mx-auto p-4 pb-24 space-y-3">
-            {/* 3D Visualization - now scrollable */}
-            <div className="w-full max-w-[400px] mx-auto">
+          <main ref={mainRef} className="flex flex-col w-full max-w-7xl mx-auto p-4 pb-24 space-y-3">
+            {/* 3D Visualization - sticky at top with selective blur for charts only */}
+            <div className="w-full max-w-[400px] mx-auto sticky top-20 z-10">
               <Visualization3D 
                 devices={deviceData}
                 totalUsage={totalUsage}
                 powerLimit={powerLimit}
                 showLabels={showLabels}
+                isChartsBlurred={isVisualizationOverlayed}
               />
             </div>
             
-            {/* Home Usage Component */}
-            <HomeUsage 
-              devices={deviceData}
-              totalDevices={totalDevices}
-              totalUsage={totalUsage}
-              powerLimit={powerLimit}
-              onPowerLimitChange={setPowerLimit}
-            />
-            
-            {/* 2x2 Grid for Stats, Devices, Anomalies, Optimize */}
-            <div className="grid grid-cols-2 gap-3">
-              <Stats 
-                totalUsage={totalUsage}
-                powerLimit={powerLimit}
+            {/* Scrollable Content that overlays the 3D visualization */}
+            <div className="relative z-20 bg-gradient-to-b from-transparent via-[#09090B]/80 to-[#09090B] space-y-3 -mt-8 pt-8">
+              {/* Home Usage Component */}
+              <HomeUsage 
+                devices={deviceData}
                 totalDevices={totalDevices}
-                onClick={() => setExpandedComponent('stats')}
-              />
-              <Devices 
-                devices={deviceData}
-                onClick={() => setExpandedComponent('devices')}
-              />
-              <Anomalies 
                 totalUsage={totalUsage}
                 powerLimit={powerLimit}
-                devices={deviceData}
-                onClick={() => setExpandedComponent('anomalies')}
+                onPowerLimitChange={setPowerLimit}
               />
-              <Optimize 
-                totalUsage={totalUsage}
-                powerLimit={powerLimit}
-                devices={deviceData}
-                onClick={() => setExpandedComponent('optimize')}
-              />
+              
+              {/* 2x2 Grid for Stats, Devices, Anomalies, Optimize */}
+              <div className="grid grid-cols-2 gap-3">
+                <Stats 
+                  totalUsage={totalUsage}
+                  powerLimit={powerLimit}
+                  totalDevices={totalDevices}
+                  onClick={() => setExpandedComponent('stats')}
+                />
+                <Devices 
+                  devices={deviceData}
+                  onClick={() => setExpandedComponent('devices')}
+                />
+                <Anomalies 
+                  totalUsage={totalUsage}
+                  powerLimit={powerLimit}
+                  devices={deviceData}
+                  onClick={() => setExpandedComponent('anomalies')}
+                />
+                <Optimize 
+                  totalUsage={totalUsage}
+                  powerLimit={powerLimit}
+                  devices={deviceData}
+                  onClick={() => setExpandedComponent('optimize')}
+                />
+              </div>
             </div>
           </main>
         </div>

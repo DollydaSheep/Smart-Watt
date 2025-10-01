@@ -155,7 +155,7 @@ export function HomeUsage({ totalUsage, powerLimit, onPowerLimitChange }: HomeUs
   return (
     <div className="w-full">
       <div 
-        className="w-full bg-[#161617] rounded-3xl p-4 cursor-pointer hover:bg-[#1a1a1b] transition-colors duration-200"
+        className="w-full bg-[#161617] rounded-3xl p-4 cursor-pointer hover:bg-[#1a1a1b] transition-colors duration-200 flex flex-col h-32"
         onClick={() => setIsPanelOpen(!isPanelOpen)}
       >
         <div className="flex items-center gap-3 mb-2">
@@ -205,36 +205,20 @@ export function HomeUsage({ totalUsage, powerLimit, onPowerLimitChange }: HomeUs
         <h1 className="text-4xl font-bold">
           <AnimatedNumber value={totalUsage} colorClass={getKwColorClass()} />
         </h1>
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between mt-auto">
           <div className="flex gap-1 items-center">
-            <motion.div
-              className={`${getColorClasses('text')} size-4`}
-              layout
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
+            <div className={`${getColorClasses('text')} size-4`}>
               <TrendingUp className="size-4"/>
-            </motion.div>
-            <motion.span 
-              className={`${getColorClasses('text')} text-xs`}
-              layout
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
+            </div>
+            <span className={`${getColorClasses('text')} text-xs`}>
               {isOverLimit ? 'Over Limit!' : isNearLimit ? 'Near Limit' : 'Optimized Efficiency'}
-            </motion.span>
+            </span>
           </div>
           <div className="flex items-center">
-            <motion.div 
-              className={`w-1.5 h-1.5 rounded-full mr-2 ${getColorClasses('bg')}`}
-              layout
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            />
-            <motion.span 
-              className={`${getColorClasses('text')} text-sm`}
-              layout
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
+            <div className={`w-1.5 h-1.5 rounded-full mr-2 ${getColorClasses('bg')}`} />
+            <span className={`${getColorClasses('text')} text-sm`}>
               {isOverLimit ? '1 Anomalies' : isNearLimit ? '1 Anomalies' : '0 Anomalies'}
-            </motion.span>
+            </span>
           </div>
         </div>
       </div>
@@ -249,7 +233,7 @@ export function HomeUsage({ totalUsage, powerLimit, onPowerLimitChange }: HomeUs
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="bg-gray-50 dark:bg-[#0f0f10] rounded-2xl mt-2 p-4 border border-gray-200 dark:border-gray-800">
+            <div className="bg-[#0f0f10] rounded-2xl mt-2 p-4 border border-[#0f0f10]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Total Bill Section */}
                 <div className="space-y-3">

@@ -87,7 +87,7 @@ export const OptimizeDetailed: React.FC<OptimizeDetailedProps> = ({ totalUsage, 
       </div>
 
       {/* Optimization Suggestions */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-1 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Optimization Recommendations</h3>
         
         <div className="space-y-4">
@@ -131,7 +131,7 @@ export const OptimizeDetailed: React.FC<OptimizeDetailedProps> = ({ totalUsage, 
       </div>
 
       {/* Device Efficiency Analysis */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-1 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Device Efficiency Analysis</h3>
         
         <div className="space-y-4">

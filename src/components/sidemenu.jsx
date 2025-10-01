@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function Sidemenu() {
+export default function Sidemenu({ isModalOpen = false }) {
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
   
@@ -98,7 +98,7 @@ export default function Sidemenu() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex flex-col w-16 h-screen bg-black/90 backdrop-blur-sm fixed left-0 top-0 z-40">
+      <div className={`hidden md:flex flex-col w-16 h-screen bg-black/90 backdrop-blur-sm fixed left-0 top-0 z-40 ${isModalOpen ? 'pointer-events-none opacity-50' : ''}`}>
         {/* Logo */}
         <div className="flex justify-center py-4 pt-7">
           <img 
@@ -159,7 +159,7 @@ export default function Sidemenu() {
       </div>
       
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-t border-gray-800">
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-t border-gray-800 ${isModalOpen ? 'pointer-events-none opacity-50' : ''}`}>
         <div className="flex justify-around">
           {navItems.map((item, index) => (
             <Link

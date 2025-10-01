@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Label, Pie, PieChart, Sector } from "recharts"
 import { PieSectorDataItem } from "recharts/types/polar/Pie"
-
+import { getCurrentDeviceData } from "@/data/deviceData"
 
 import {
   ChartConfig,
@@ -13,66 +13,43 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-
 export const description = "An interactive pie chart"
-
-const desktopData = [
-  { month: "january", desktop: 186, fill: "var(--color-january)" },
-  { month: "february", desktop: 305, fill: "var(--color-february)" },
-  { month: "march", desktop: 237, fill: "var(--color-march)" },
-  { month: "april", desktop: 173, fill: "var(--color-april)" },
-  { month: "may", desktop: 209, fill: "var(--color-may)" },
-]
-
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-  },
-  mobile: {
-    label: "Mobile",
-  },
-  january: {
-    label: "January",
-    color: "var(--chart-1)",
-  },
-  february: {
-    label: "February",
-    color: "var(--chart-2)",
-  },
-  march: {
-    label: "March",
-    color: "var(--chart-3)",
-  },
-  april: {
-    label: "April",
-    color: "var(--chart-4)",
-  },
-  may: {
-    label: "May",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig
 
 export function ChartPieInteractive() {
   const id = "pie-interactive"
- 
   const [activeIndex, setActiveIndex] = React.useState(0)
 
-   const handlePieClick = (data: { month: string; desktop: number; fill: string }, index: number) => {
+  // Get real device data
+  const devices = getCurrentDeviceData();
+  
+  // Convert device data to pie chart format
+  const pieData = devices.map((device, index) => ({
+    name: device.name,
+    value: device.powerValue,
+    fill: `var(--chart-${index + 1})`,
+  }));
+
+  // Create dynamic chart config based on devices
+  const chartConfig = devices.reduce((config, device, index) => {
+    config[device.name.toLowerCase()] = {
+      label: device.name,
+      color: `var(--chart-${index + 1})`,
+    };
+    return config;
+  }, {} as ChartConfig);
+
+  const handlePieClick = (data: unknown, index: number) => {
     setActiveIndex(index)
   }
 
   return (
-    <div className="w-full h-full relative flex items-center justify-center p-2">
+    <div className="w-full h-full relative flex items-center justify-center p-4">
       <ChartStyle id={id} config={chartConfig} />
-      <div className="w-full h-full max-w-[120%] max-h-[120%] aspect-square">
+      <div className="w-full h-full max-w-full max-h-full aspect-square flex items-center justify-center">
         <ChartContainer
           id={id}
           config={chartConfig}
-          className="w-full h-full"
+          className="w-full h-full flex items-center justify-center"
         >
           <PieChart 
             margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
@@ -82,9 +59,9 @@ export function ChartPieInteractive() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={desktopData}
-              dataKey="desktop"
-              nameKey="month"
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
               innerRadius="70%"
               outerRadius="90%"
               strokeWidth={0}
@@ -94,7 +71,7 @@ export function ChartPieInteractive() {
                 outerRadius = 0,
                 ...props
               }: PieSectorDataItem) => (
-                <g onClick={() => handlePieClick(desktopData[activeIndex], activeIndex)} style={{ cursor: 'pointer' }}>
+                <g onClick={() => handlePieClick(pieData[activeIndex], activeIndex)} style={{ cursor: 'pointer' }}>
                   <Sector {...props} outerRadius={outerRadius + 10} />
                   <Sector
                     {...props}
@@ -120,7 +97,7 @@ export function ChartPieInteractive() {
                   }
                   
                   const { cx, cy } = viewBox;
-                  const activeColor = desktopData[activeIndex].fill;
+                  const activeColor = pieData[activeIndex]?.fill || "var(--chart-1)";
 
                   return (
                     <text
@@ -135,14 +112,14 @@ export function ChartPieInteractive() {
                         className="text-5xl sm:text-6xl md:text-3xl lg:text-5xl font-bold"
                         style={{ fill: activeColor }}
                       >
-                        {desktopData[activeIndex].desktop.toLocaleString()}
+                        {pieData[activeIndex]?.value.toFixed(1)}
                       </tspan>
                       <tspan
                         x={cx}
                         y={cy + (window.innerWidth < 640 ? 30 : 25)}
                         className="fill-white/50 text-lg md:text-base"
                       >
-                        Visitors
+                        kW Usage
                       </tspan>
                     </text>
                   );

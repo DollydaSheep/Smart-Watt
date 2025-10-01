@@ -48,7 +48,7 @@ export const AnomaliesDetailed: React.FC<AnomaliesDetailedProps> = ({ totalUsage
       </div>
 
       {/* Current Alerts */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-2 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">Current Alerts</h3>
         
         <div className="space-y-3">
@@ -96,7 +96,7 @@ export const AnomaliesDetailed: React.FC<AnomaliesDetailedProps> = ({ totalUsage
       </div>
 
       {/* Detection History */}
-      <div className="bg-[#161617] rounded-xl p-6 border border-[#161617]">
+      <div className="bg-[#161617] rounded-xl p-2 border border-[#161617]">
         <h3 className="text-xl font-semibold text-white mb-4">24-Hour Detection Pattern</h3>
         
         <div className="flex items-end space-x-1 h-32 mb-4">
