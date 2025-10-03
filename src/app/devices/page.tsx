@@ -1,19 +1,9 @@
-"use client"
 
+import DeviceControl from "@/components/DeviceControl";
 import Image from "next/image";
 import { useState } from "react";
 
 export default function DevicesPage(){
-
-  const [turnOn, setTurnOn] = useState([false,false,false,false]);
-
-  const toggleDevice = (index: number) => {
-    setTurnOn(prev => {
-      const updated = [...prev];      // copy the array
-      updated[index] = !updated[index]; // toggle only the clicked device
-      return updated;
-    });
-  };
 
   return (
     <>
@@ -52,145 +42,7 @@ export default function DevicesPage(){
             <h1 className="text-sm">Sort by Size</h1>
           </div>
 
-          {/* Oven */}
-          <div className="flex justify-between w-full p-4 bg-[#161617] rounded-3xl items-center">
-            <div className="flex items-center gap-2">
-              <span className="bg-[#10b981] h-4 w-4 rounded-full"></span>
-              <div className="ml-2">
-                <div className="flex items-center gap-2">
-                  <h1 className="font-medium">Oven</h1>
-                  <p className={`px-2 ${turnOn[0] ? "bg-green-600" : "bg-red-600"} rounded-full text-sm ${turnOn[0] ? "text-green-100" : "tex-red-100"}`}>{turnOn[0] ? "active" : "inactive"}</p>
-                </div>
-                <p className="text-gray-400 text-sm">Kitchen</p>
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => toggleDevice(0)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                    turnOn[0] ? 'bg-green-400' : 'bg-black'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                      turnOn[0] ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              <div className="ml-2">
-                <h1 className="text-lg font-medium">5.2 kW</h1>
-                <p className="text-right text-sm text-gray-400">20%</p>
-              </div>
-              <span className={`${turnOn[0] ? "bg-[#10b981]" : "bg-red-400"} h-2 w-2 rounded-full`}></span>
-            </div>
-          </div>
-
-          {/* Refrigerator */}
-          <div className="flex justify-between w-full p-4 bg-[#161617] rounded-3xl items-center">
-            <div className="flex items-center gap-2">
-              <span className="bg-[#9333ea] h-4 w-4 rounded-full"></span>
-              <div className="ml-2">
-                <div className="flex items-center gap-2">
-                  <h1 className="font-medium">Refrigerator</h1>
-                  <p className={`px-2 ${turnOn[1] ? "bg-green-600" : "bg-red-600"} rounded-full text-sm ${turnOn[1] ? "text-green-100" : "tex-red-100"}`}>{turnOn[1] ? "active" : "inactive"}</p>
-                </div>
-                <p className="text-gray-400 text-sm">Kitchen</p>
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => toggleDevice(1)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                    turnOn[1] ? 'bg-green-400' : 'bg-black'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                      turnOn[1] ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              <div className="ml-2">
-                <h1 className="text-lg font-medium">5.2 kW</h1>
-                <p className="text-right text-sm text-gray-400">20%</p>
-              </div>
-              <span className={`${turnOn[1] ? "bg-[#10b981]" : "bg-red-400"} h-2 w-2 rounded-full`}></span>
-            </div>
-          </div>
-          
-          {/* PC */}
-          <div className="flex justify-between w-full p-4 bg-[#161617] rounded-3xl items-center">
-            <div className="flex items-center gap-2">
-              <span className="bg-[#3b82f6] h-4 w-4 rounded-full"></span>
-              <div className="ml-2">
-                <div className="flex items-center gap-2">
-                  <h1 className="font-medium">PC</h1>
-                  <p className={`px-2 ${turnOn[2] ? "bg-green-600" : "bg-red-600"} rounded-full text-sm ${turnOn[2] ? "text-green-100" : "tex-red-100"}`}>{turnOn[2] ? "active" : "inactive"}</p>
-                </div>
-                <p className="text-gray-400 text-sm">Office</p>
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => toggleDevice(2)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                    turnOn[2] ? 'bg-green-400' : 'bg-black'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                      turnOn[2] ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              <div className="ml-2">
-                <h1 className="text-lg font-medium">5.2 kW</h1>
-                <p className="text-right text-sm text-gray-400">20%</p>
-              </div>
-              <span className={`${turnOn[2] ? "bg-[#10b981]" : "bg-red-400"} h-2 w-2 rounded-full`}></span>
-            </div>
-          </div>
-
-          {/* TV */}
-          <div className="flex justify-between w-full p-4 bg-[#161617] rounded-3xl items-center">
-            <div className="flex items-center gap-2">
-              <span className="bg-[#fff] h-4 w-4 rounded-full"></span>
-              <div className="ml-2">
-                <div className="flex items-center gap-2">
-                  <h1 className="font-medium">TV</h1>
-                  <p className={`px-2 ${turnOn[3] ? "bg-green-600" : "bg-red-600"} rounded-full text-sm ${turnOn[3] ? "text-green-100" : "tex-red-100"}`}>{turnOn[3] ? "active" : "inactive"}</p>
-                </div>
-                <p className="text-gray-400 text-sm">Living Room</p>
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => toggleDevice(3)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                    turnOn[3] ? 'bg-green-400' : 'bg-black'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                      turnOn[3] ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-              <div className="ml-2">
-                <h1 className="text-lg font-medium">5.2 kW</h1>
-                <p className="text-right text-sm text-gray-400">20%</p>
-              </div>
-              <span className={`${turnOn[3] ? "bg-[#10b981]" : "bg-red-400"} h-2 w-2 rounded-full`}></span>
-            </div>
-          </div>
+          <DeviceControl />
 
         </div>
       </div>
